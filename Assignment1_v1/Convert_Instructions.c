@@ -148,7 +148,11 @@ float FahrenheitToCelsius_AccurateFloat(int fahrenheit)
     return (fahrenheit - 32) * (5.0f / 9.0f);
 }
 
-//float CelsiusToFahrenheit_AccurateFloat(int celsius);
+float CelsiusToFahrenheit_AccurateFloat(int celsius)
+{
+    return (9.0f / 5.0f) * (celsius) + 32;
+
+}
 
 int FahrenheitToCelsius_IntRoundedCorrectlyUsingFloat(int fahrenheit)
 {
@@ -156,27 +160,95 @@ int FahrenheitToCelsius_IntRoundedCorrectlyUsingFloat(int fahrenheit)
     return  ManualIntRoundedCorrectlyUsingFloat(preRoundedTemp);
 
 }
-//int CelsiusToFahrenheit_IntRoundedCorrectlyUsingFloat(int celsius);
 
-int FahrenheitToCelsius_PureIntRoundedDown(int fahrenheit)
+int CelsiusToFahrenheit_IntRoundedCorrectlyUsingFloat(int celsius)
 {
-    float preRoundedTemp = (fahrenheit - 32) * (5.0f / 9.0f);
-    return ManualRoundDown(preRoundedTemp);
+    double preRoundedTemp = (9.0f / 5.0f) * (celsius) + 32;
+    return ManualIntRoundedCorrectlyUsingFloat(preRoundedTemp);
 }
 
 
-//int CelsiusToFahrenheit_PureIntRoundedDown(int celsius);
+int FahrenheitToCelsius_PureIntRoundedDown(int fahrenheit)
+{
+    float tempCel = (fahrenheit - 32) * (5.0f / 9.0f);
+    return ManualIntRoundDown(tempCel);
+}
+
+int CelsiusToFahrenheit_PureIntRoundedDown(int celsius)
+{
+    double tempFah = (9.0f / 5.0f) * (celsius) + 32;
+    return ManualIntRoundDown(tempFah);
+}
+
+
+/*
+    PureIntRoundedCorrectly
+     - Input and output are both int.
+     - Internal operations are pure integer (no float or double), which is faster on some processors.
+     - Inflate (scale by a factor of 10) the input to perform correct rounding.
+     - The returned value is within 0.5 degrees of the correct answer.
+     - Rounds correctly, up or down, yielding the closest integer.
+     Celsius = (Fahrenheit - 32) * (5 ÷ 9)
+
+     Expected:
+     1. 33 fahrenheit is 1 celsius
+*/
 int FahrenheitToCelsius_PureIntRoundedCorrectly(int fahrenheit)
 {
+    /*int scale = 10;
     int adjustedFah = fahrenheit - 32;
     int inflatedCel = adjustedFah * 50;
     int roundedCel = (inflatedCel + 45) / 90;
     return roundedCel;
+    */
+
+    // better solution
+    int scale = 500; /* bigger scale better to maintain precision*/
+    int adjustedFah = fahrenheit - 32;
+    int numerator;
+    if (adjustedFah >= 0)
+    {
+        // positive temperature, add half of the denominator for rounding
+        numerator = adjustedFah * (5 * scale + (9 * scale / 2));
+    }
+    else
+    {
+        // negative temperature, substract half of the denominator for rounding
+        numerator = adjustedFah * (5 * scale - (9 * scale / 2));
+    }
+
+    return  numerator / (9 * scale); // deflat calculated temperature
+}
+
+/*
+    PureIntRoundedCorrectly
+     - Input and output are both int.
+     - Internal operations are pure integer (no float or double), which is faster on some processors.
+     - Inflate (scale by a factor of 10) the input to perform correct rounding.
+     - The returned value is within 0.5 degrees of the correct answer.
+     - Rounds correctly, up or down, yielding the closest integer.
+     Expected:
+     1. 1 celsius is 34 fahrenheit
+*/
+
+int CelsiusToFahrenheit_PureIntRoundedCorrectly(int celsius)
+{
+    int scale = 10;
+    int scaledCel = celsius * scale; 
+    int inflatedConvertFactor = (9 * scaledCel) / 5; /* scale numerator by a factor of scaledCel value*/
+    int scaledOffSet = 32 * scale;
+    int roundingFactor = scale / 2; /* equivalent of adding 0.5 for rounding*/
+    int adjustedFah = inflatedConvertFactor + scaledOffSet + roundingFactor;
+    return adjustedFah / scale; // deflate adjusted temp
+
 }
 
 
 
-//int CelsiusToFahrenheit_PureIntRoundedCorrectly(int celsius);
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////Helper Functions/////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 int PromptForTemperature(char* tempType) {
     int tempEntered;
 
@@ -203,8 +275,12 @@ int PromptForTemperature(char* tempType) {
     Function to manually calculate the floor of a number
     If num is positive or exactly an integer, just reutn intPart
     Otherwise, for negative numbers with a decimal part, substract 1
+
+    Expected:
+    1. 33 fahrenheit is 0 celsius
+    2. 1 celsius is 33 fahrenheit
 */
-int ManualRoundDown(float num)
+int ManualIntRoundDown(double num)
 {
     int intPart = (int)num; /* get the integer part*/
     if (num >= 0)
@@ -244,6 +320,10 @@ int ManualRoundUp(float num)
     By introducing a small epsilon, we allow some "wiggle room" in the comparison, 
     ensuring that values near 0.5 are treated as 0.5 for the rounding logic.
 
+    Expected:
+    1. 33 fahrenheit is 1 celsius
+    2. 1 celsius is 34 fahrenheit
+
 */
 int ManualIntRoundedCorrectlyUsingFloat(double num)
 {
@@ -258,35 +338,113 @@ int ManualIntRoundedCorrectlyUsingFloat(double num)
      return intPart; 
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////Test Fahrenheit///////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void RunFahrenheitToCelsisuTests()
+{
+    int fahrenheitTests[] = { 0, 33, 100, 212 }; // 0°F, freezing point, 33°F, boiling point, and others
+    printf("\n");
+    printf("Begin Testing Fahrenheit To Celsius Conversions...");
+    for (int i = 0; i < sizeof(fahrenheitTests) / sizeof(fahrenheitTests[0]); i++)
+    {
+        int tempFah = fahrenheitTests[i];
+
+        printf("\n%d. Testing %d°F:\n", (i+1), tempFah);
+
+        float floatRoundedTempCel = FahrenheitToCelsius_AccurateFloat(tempFah);
+        printf("%-35s: %d Fahrenheit is %f Celsius\n", "AccurateFloat", tempFah, floatRoundedTempCel);
+
+        int roundedTempCel = FahrenheitToCelsius_IntRoundedCorrectlyUsingFloat(tempFah);
+        printf("%-35s: %d Fahrenheit is %d Celsius\n", "IntRoundedCorrectlyUsingFloat", tempFah, roundedTempCel);
+
+        roundedTempCel = FahrenheitToCelsius_PureIntRoundedDown(tempFah);
+        printf("%-35s: %d Fahrenheit is %d Celsius\n", "PureIntRoundedDown", tempFah, roundedTempCel);
+
+        roundedTempCel = FahrenheitToCelsius_PureIntRoundedCorrectly(tempFah);
+        printf("%-35s: %d Fahrenheit is %d Celsius\n", "PureIntRoundedCorrectly", tempFah, roundedTempCel);
+    }
+
+}
+
+void RunCelsiusToFahrenheitTests()
+{
+    printf("\n");
+    printf("\nBegin Testing Celsius to Fahrenheit Conversions...");
+    int celsiusTests[] = { 0, 1, 10, 100, }; // 0°C, 1°C, typical, boiling point
+    for (int i = 0; i < sizeof(celsiusTests) / sizeof(celsiusTests[0]); i++)
+    {
+        int tempCel = celsiusTests[i];
+
+        printf("\n%d. Testing %d°C:\n", (i+1), tempCel);
+
+        float floatRoundedTempFah = CelsiusToFahrenheit_AccurateFloat(tempCel);
+        printf("%-35s: %d Celsius is %f Fahrenheit\n", "AccurateFloat", tempCel, floatRoundedTempFah);
+
+        int roundedTempFah = CelsiusToFahrenheit_IntRoundedCorrectlyUsingFloat(tempCel);
+        printf("%-35s: %d Celsius is %d Fahrenheit\n", "IntRoundedCorrectlyUsingFloat", tempCel, roundedTempFah);
+
+        roundedTempFah = CelsiusToFahrenheit_PureIntRoundedDown(tempCel);
+        printf("%-35s: %d Celsius is %d Fahrenheit\n", "PureIntRoundedDown", tempCel, roundedTempFah);
+
+        roundedTempFah = CelsiusToFahrenheit_PureIntRoundedCorrectly(tempCel);
+        printf("%-35s: %d Celsius is %d Fahrenheit\n", "PureIntRoundedCorrectly", tempCel, roundedTempFah);
+    }
+}
+
+
+
 int main(void)
 {
-    char* tempFah = "f";
-    char* tempCel = "c";
-    int temp;
+    char* typeFah = "f";
+    char* typeCel = "c";
+    int tempFah;
+    int tempCel;
 
-    // get Fahrenheit temp
-    temp = PromptForTemperature(tempFah);
-    if (temp == -999)
+    tempFah = PromptForTemperature(typeFah); /* get Fahrenheit*/
+    if (tempFah == -999)
     {
-        printf("Error: Invalid temperature. Exit application with code: 1.\n");
+        printf("Error: Invalid Fahrenheit temperature. Exit application with code: 1.\n");
         return 1;
     }
-    float tempConvertCel = FahrenheitToCelsius_AccurateFloat(temp);
-    printf("%-35s: %d Fahrenheit is %f Celsius\n", "AccurateFloat", temp, tempConvertCel);
+    float floatRoundedTempCel = FahrenheitToCelsius_AccurateFloat(tempFah);
+    printf("%-35s: %d Fahrenheit is %f Celsius\n", "AccurateFloat", tempFah, floatRoundedTempCel);
 
-     int tempRoundedUp = FahrenheitToCelsius_IntRoundedCorrectlyUsingFloat(temp);
-    printf("%-35s: %d Fahrenheit is %d Celsius\n","IntRoundedCorrectlyUsingFloat", temp, tempRoundedUp);
+     int roundedTempCel = FahrenheitToCelsius_IntRoundedCorrectlyUsingFloat(tempFah);
+    printf("%-35s: %d Fahrenheit is %d Celsius\n","IntRoundedCorrectlyUsingFloat", tempFah, roundedTempCel);
 
-    int tempRoundedDown = FahrenheitToCelsius_PureIntRoundedDown(temp);
-    printf("%-35s: %d Fahrenheit is %d Celsius\n", "PureIntRoundedDown", temp, tempRoundedDown);
+    roundedTempCel = FahrenheitToCelsius_PureIntRoundedDown(tempFah);
+    printf("%-35s: %d Fahrenheit is %d Celsius\n", "PureIntRoundedDown", tempFah, roundedTempCel);
 
   
-    int tempRoundedCorrect = FahrenheitToCelsius_PureIntRoundedCorrectly(temp);
-    printf("%-35s: %d Fahrenheit is %d Celsius\n", "PureIntRoundedCorrectly", temp, tempRoundedCorrect);
+    roundedTempCel = FahrenheitToCelsius_PureIntRoundedCorrectly(tempFah);
+    printf("%-35s: %d Fahrenheit is %d Celsius\n", "PureIntRoundedCorrectly", tempFah, roundedTempCel);
 
     printf("\n");
-    temp = PromptForTemperature(tempCel);
+
+    tempCel = PromptForTemperature(typeCel); /* get celsius*/
+    if (tempCel == -999)
+    {
+        printf("Error: Invalid Celsius temperature. Exit application with code: 1.\n");
+        return 1;
+    }
+    
+    float floatRoundedTempFah = CelsiusToFahrenheit_AccurateFloat(tempCel);
+    printf("%-35s: %d Celsius is %f Fahrenheit\n", "AccurateFloat", tempCel , floatRoundedTempFah);
+    
+    int roundedTempFah = CelsiusToFahrenheit_IntRoundedCorrectlyUsingFloat(tempCel);
+    printf("%-35s: %d Celsius is %d Fahrenheit\n", "IntRoundedCorrectlyUsingFloat", tempCel, roundedTempFah);
+
+    roundedTempFah = CelsiusToFahrenheit_PureIntRoundedDown(tempCel);
+    printf("%-35s: %d Celsius is %d Fahrenheit\n", "PureIntRoundedDown", tempCel, roundedTempFah);
+
+    roundedTempFah = CelsiusToFahrenheit_PureIntRoundedCorrectly(tempCel);
+    printf("%-35s: %d Celsius is %d Fahrenheit\n", "PureIntRoundedCorrectly", tempCel, roundedTempFah);
+
+    RunFahrenheitToCelsisuTests();
+    RunCelsiusToFahrenheitTests();
 
 
     return 0;
-}
+  }
