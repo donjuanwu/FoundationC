@@ -143,44 +143,40 @@
 #include <stdio.h>
 
 
-/* Forward declarations for functions */
-float FahrenheitToCelsius_AccurateFloat(int fahrenheit);
-float CelsiusToFahrenheit_AccurateFloat(int celsius);
-
-int FahrenheitToCelsius_IntRoundedCorrectlyUsingFloat(int fahrenheit);
-int CelsiusToFahrenheit_IntRoundedCorrectlyUsingFloat(int celsius);
-
-int FahrenheitToCelsius_PureIntRoundedDown(int fahrenheit);
-int CelsiusToFahrenheit_PureIntRoundedDown(int celsius);
-
-int FahrenheitToCelsius_PureIntRoundedCorrectly(int fahrenheit);
-int CelsiusToFahrenheit_PureIntRoundedCorrectly(int celsius);
-
-int ManualRoundDown(float num);
-int ManualRoundUp(float num);
-
-
-
 float FahrenheitToCelsius_AccurateFloat(int fahrenheit)
 {
     return (fahrenheit - 32) * (5.0f / 9.0f);
 }
-float CelsiusToFahrenheit_AccurateFloat(int celsius);
+
+//float CelsiusToFahrenheit_AccurateFloat(int celsius);
 
 int FahrenheitToCelsius_IntRoundedCorrectlyUsingFloat(int fahrenheit)
 {
-    float preRoundedTemp = (fahrenheit - 32) * (5.0f / 9.0f);
-    return ManualRoundUp(preRoundedTemp);
+    double preRoundedTemp = (fahrenheit - 32) * (5.0f / 9.0f);
+    return  ManualIntRoundedCorrectlyUsingFloat(preRoundedTemp);
 
 }
-int CelsiusToFahrenheit_IntRoundedCorrectlyUsingFloat(int celsius);
+//int CelsiusToFahrenheit_IntRoundedCorrectlyUsingFloat(int celsius);
 
-int FahrenheitToCelsius_PureIntRoundedDown(int fahrenheit);
-int CelsiusToFahrenheit_PureIntRoundedDown(int celsius);
+int FahrenheitToCelsius_PureIntRoundedDown(int fahrenheit)
+{
+    float preRoundedTemp = (fahrenheit - 32) * (5.0f / 9.0f);
+    return ManualRoundDown(preRoundedTemp);
+}
 
-int FahrenheitToCelsius_PureIntRoundedCorrectly(int fahrenheit);
-int CelsiusToFahrenheit_PureIntRoundedCorrectly(int celsius);
 
+//int CelsiusToFahrenheit_PureIntRoundedDown(int celsius);
+int FahrenheitToCelsius_PureIntRoundedCorrectly(int fahrenheit)
+{
+    int adjustedFah = fahrenheit - 32;
+    int inflatedCel = adjustedFah * 50;
+    int roundedCel = (inflatedCel + 45) / 90;
+    return roundedCel;
+}
+
+
+
+//int CelsiusToFahrenheit_PureIntRoundedCorrectly(int celsius);
 int PromptForTemperature(char* tempType) {
     int tempEntered;
 
@@ -238,6 +234,30 @@ int ManualRoundUp(float num)
     return intPart;
 }
 
+/*
+    Function to manaully calculate the rounded (up or down) int correctly
+    If the fractional part of the number is greater than or equals to .5 then return 1 higher
+    Otherwise return the integer value of the number
+
+    Notes:
+    Floating-point numbers are not always represented exactly due to precision limitations. 
+    By introducing a small epsilon, we allow some "wiggle room" in the comparison, 
+    ensuring that values near 0.5 are treated as 0.5 for the rounding logic.
+
+*/
+int ManualIntRoundedCorrectlyUsingFloat(double num)
+{
+  
+    int intPart = (int)(num); 
+    double fractionalPart = num - intPart; 
+
+    if (fractionalPart >= 0.5) 
+    {
+        return intPart + 1;
+    }
+     return intPart; 
+}
+
 int main(void)
 {
     char* tempFah = "f";
@@ -256,6 +276,16 @@ int main(void)
 
      int tempRoundedUp = FahrenheitToCelsius_IntRoundedCorrectlyUsingFloat(temp);
     printf("%-35s: %d Fahrenheit is %d Celsius\n","IntRoundedCorrectlyUsingFloat", temp, tempRoundedUp);
+
+    int tempRoundedDown = FahrenheitToCelsius_PureIntRoundedDown(temp);
+    printf("%-35s: %d Fahrenheit is %d Celsius\n", "PureIntRoundedDown", temp, tempRoundedDown);
+
+  
+    int tempRoundedCorrect = FahrenheitToCelsius_PureIntRoundedCorrectly(temp);
+    printf("%-35s: %d Fahrenheit is %d Celsius\n", "PureIntRoundedCorrectly", temp, tempRoundedCorrect);
+
+    printf("\n");
+    temp = PromptForTemperature(tempCel);
 
 
     return 0;
