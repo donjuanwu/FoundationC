@@ -17,8 +17,8 @@
 **   Updated:   October 21, 2023
 **
 ** Student Solution
-**   Author:    --- Enter your name here ---
-**   Date:      --- Enter date here ---
+**   Author:    Don Dang
+**   Date:      9/11/2024
 **
 ** OBJECTIVE
 **
@@ -96,6 +96,13 @@
 **                short |      2 |               -32768 |                32767 |               -32768 |
 **
 ** The extra column spaces make room for the larger type names and numbers.
+* 
+* References:
+* 1. Tutorials Points: <limits.h> Library Macros
+*   - https://www.tutorialspoint.com/c_standard_library/limits_h.htm
+* 2. cplusplus.com: printf
+*   - https://cplusplus.com/reference/cstdio/printf/
+* 
 */
 
 #include <stdio.h>
@@ -103,8 +110,10 @@
 #include <limits.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////Over Flow Helpers/////////////////////////////////////
+////////////////////////////////Over Flow Helpers Functions///////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
+
+
 short OverFlowShort(int num)
 {
     short shortOverFlow = SHRT_MAX;
@@ -147,9 +156,21 @@ unsigned long OverFlowUnsignedLong(int num)
     return uLongOverFlow + num;
 }
 
+long long OverFlowLongLong(int num)
+{
+    long long longlongOverFlow = LLONG_MAX;
+    return longlongOverFlow + num;
+}
+
+unsigned long long OverFlowUnsignedLongLong(unsigned long long num)
+{
+    unsigned long long uLongLongOverFlow = ULLONG_MAX;
+    return uLongLongOverFlow + num;
+}
+
 void RunProgram()
 {
-    const int spaces = 15;
+    const int spaces = 25;
     const int numOne = 1;
     const int numZero = 0;
     printf("%*s | %s | %*s | %*s | %*s |\n", spaces, "Type", "sizeof", spaces, "min", spaces, "max", spaces, "max + 1");
@@ -161,7 +182,10 @@ void RunProgram()
     printf("%*s | %*zu | %*u | %*u | %*u |\n", spaces, "unsigned short", 6, sizeof(unsigned short), spaces, numZero, spaces, USHRT_MAX, spaces, OverFlowUnsignedChar(numOne));
     printf("%*s | %*zu | %*u | %*u | %*u |\n", spaces, "unsigned int", 6, sizeof(unsigned int), spaces, numZero, spaces, UINT_MAX, spaces, OverFlowUnsignedInt(numOne));
     printf("%*s | %*zu | %*u | %*u | %*u |\n", spaces, "unsigned long", 6, sizeof(unsigned long), spaces, numZero, spaces, ULONG_MAX, spaces, OverFlowUnsignedLong(numOne));
-
+    printf("%*s | %*zu | %*s | %*s | %*s |\n", spaces, "float", 6, sizeof(float), spaces, "N/A", spaces, "N/A", spaces, "N/A");
+    printf("%*s | %*zu | %*s | %*s | %*s |\n", spaces, "double", 6, sizeof(double), spaces, "N/A", spaces, "N/A", spaces, "N/A");
+    printf("%*s | %*zu | %*lld | %*lld | %*lld |\n", spaces, "long long", 6, sizeof(long long), spaces, LLONG_MIN, spaces, LLONG_MAX, spaces, OverFlowLongLong(numOne));
+    printf("%*s | %*zu | %*llu | %*llu | %*llu |\n", (int)spaces, "unsigned long long", 6, sizeof(unsigned long long), (int)spaces, (unsigned long long)numZero, (int)spaces, ULLONG_MAX, (int)spaces, OverFlowUnsignedLongLong((unsigned long long)numOne));
 }
 
 
