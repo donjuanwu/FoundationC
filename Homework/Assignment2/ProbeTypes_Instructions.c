@@ -100,13 +100,71 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////Over Flow Helpers/////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+short OverFlowShort(int num)
+{
+    short shortOverFlow = SHRT_MAX;
+    return shortOverFlow + num;
+}
+
+int OverFlowInt(int num)
+{
+    int intOverFlow = INT_MAX;
+    return intOverFlow + num;
+}
+
+long OverFlowLong(int num)
+{
+    long longOverFlow = LONG_MAX;
+    return longOverFlow + num;
+}
+
+unsigned char OverFlowUnsignedChar(int num)
+{
+    unsigned char uCharOverFlow = UCHAR_MAX;
+    return uCharOverFlow + num;
+}
+
+unsigned short OverFlowUnsignedShort(int num)
+{
+    unsigned short uShortOverFlow = SHRT_MAX;
+    return uShortOverFlow + num;
+}
+
+unsigned int OverFlowUnsignedInt(int num)
+{
+    unsigned int uIntOverFlow = UINT_MAX;
+    return uIntOverFlow + num;
+}
+
+unsigned long OverFlowUnsignedLong(int num)
+{
+    unsigned long uLongOverFlow = ULONG_MAX;
+    return uLongOverFlow + num;
+}
 
 void RunProgram()
 {
-    printf("Not yet implemented.\n");  /* STUDENTS: Delete this line. */
+    const int spaces = 15;
+    const int numOne = 1;
+    const int numZero = 0;
+    printf("%*s | %s | %*s | %*s | %*s |\n", spaces, "Type", "sizeof", spaces, "min", spaces, "max", spaces, "max + 1");
+    printf("%*s | %*zu | %*d | %*d | %*d |\n", spaces, "char", 6, sizeof(char), spaces, SCHAR_MIN, spaces, SCHAR_MAX, spaces, SCHAR_MAX + 1);
+    printf("%*s | %*zu | %*d | %*u | %*d |\n", spaces, "short", 6, sizeof(short), spaces, SHRT_MIN, spaces, SHRT_MAX, spaces, OverFlowShort(numOne));
+    printf("%*s | %*zu | %*d | %*u | %*d |\n", spaces, "int", 6, sizeof(int), spaces, INT_MIN, spaces, INT_MAX, spaces, OverFlowInt(numOne));
+    printf("%*s | %*zu | %*d | %*ld | %*ld |\n", spaces, "long", 6, sizeof(long), spaces, LONG_MIN, spaces, LONG_MAX, spaces, OverFlowLong(numOne));
+    printf("%*s | %*zu | %*u | %*u | %*u |\n", spaces, "unsigned char", 6, sizeof(unsigned char), spaces, numZero, spaces, UCHAR_MAX, spaces, OverFlowUnsignedChar(numOne));
+    printf("%*s | %*zu | %*u | %*u | %*u |\n", spaces, "unsigned short", 6, sizeof(unsigned short), spaces, numZero, spaces, USHRT_MAX, spaces, OverFlowUnsignedChar(numOne));
+    printf("%*s | %*zu | %*u | %*u | %*u |\n", spaces, "unsigned int", 6, sizeof(unsigned int), spaces, numZero, spaces, UINT_MAX, spaces, OverFlowUnsignedInt(numOne));
+    printf("%*s | %*zu | %*u | %*u | %*u |\n", spaces, "unsigned long", 6, sizeof(unsigned long), spaces, numZero, spaces, ULONG_MAX, spaces, OverFlowUnsignedLong(numOne));
 
-    /* TODO: Implement your solution here. */
 }
+
+
 
 /*
 ** STUDENTS - DO NOT MODIFY below this point.

@@ -137,10 +137,10 @@
 **     continue to work as expected with the new legal range.
 */
 
-char EncryptChar (char input, int position);
-char DecryptChar (char input, int position);
-
-int main(void)
-{
-    return 0;
-}
+//char EncryptChar (char input, int position);
+//char DecryptChar (char input, int position);
+//
+//int main(void)
+//{
+//    return 0;
+//}
