@@ -44,20 +44,29 @@
 ** The first quarter of the program's output should look identical to this:
 **
 **          WhileTrace_StartLessEnd (0, 0) starting: done!
+*           WhileTrace_StartLessEnd (0, 1) starting: 0 done!
+*           WhileTrace_StartLessEnd (0, 2) starting: 0 1 done!
+*           WhileTrace_StartLessEnd (0, 3) starting: 0 1 2 done!
+*           WhileTrace_StartLessEnd (0, 3) starting: 0 1 2 done!
+*           WhileTrace_StartLessEnd (1, 3) starting: 1 2 done!
+*           WhileTrace_StartLessEnd (2, 3) starting: 2 done!
+*           WhileTrace_StartLessEnd (3, 3) starting: done!
+*           WhileTrace_StartLessEnd (4, 3) starting: done!
+* 
 **            ForTrace_StartLessEnd (0, 0) starting: done!
-**          WhileTrace_StartLessEnd (0, 1) starting: 0 done!
+**          
 **            ForTrace_StartLessEnd (0, 1) starting: 0 done!
-**          WhileTrace_StartLessEnd (0, 2) starting: 0 1 done!
+**          
 **            ForTrace_StartLessEnd (0, 2) starting: 0 1 done!
-**          WhileTrace_StartLessEnd (0, 3) starting: 0 1 2 done!
+**          
 **            ForTrace_StartLessEnd (0, 3) starting: 0 1 2 done!
-**          WhileTrace_StartLessEnd (1, 3) starting: 1 2 done!
+**          
 **            ForTrace_StartLessEnd (1, 3) starting: 1 2 done!
-**          WhileTrace_StartLessEnd (2, 3) starting: 2 done!
+**          
 **            ForTrace_StartLessEnd (2, 3) starting: 2 done!
-**          WhileTrace_StartLessEnd (3, 3) starting: done!
+**          
 **            ForTrace_StartLessEnd (3, 3) starting: done!
-**          WhileTrace_StartLessEnd (4, 3) starting: done!
+**          
 **            ForTrace_StartLessEnd (4, 3) starting: done!
 **
 ** TESTING
@@ -105,7 +114,16 @@ const int g_functionNameWidth = 32;
 **       example test output above.
 */
 
-//void WhileTrace_StartLessEnd         (int start, int end);
+void WhileTrace_StartLessEnd(int start, int end)
+{
+    printf("Starting: ");
+    while (start < end)
+    {
+        printf("%d ", start);
+        start++;
+    }
+    printf("done!\n");
+}
 //void WhileTrace_StartLessEqualEnd    (int start, int end);
 //void WhileTrace_StartGreaterEnd      (int start, int end);
 //void WhileTrace_StartGreaterEqualEnd (int start, int end);
@@ -118,11 +136,11 @@ const int g_functionNameWidth = 32;
 ///* STUDENTS: Do not modify code below this point. */
 ///* ---------------------------------------------- */
 //
-//void TraceBoth_StartLessEnd(const int start, const int end)
-//{
-//    WhileTrace_StartLessEnd(start, end);
-//    ForTrace_StartLessEnd(start, end);
-//}
+void TraceBoth_StartLessEnd(const int start, const int end)
+{
+    WhileTrace_StartLessEnd(start, end);
+    //ForTrace_StartLessEnd(start, end);
+}
 //
 //void TraceBoth_StartLessEqualEnd(const int start, const int end)
 //{
@@ -144,8 +162,7 @@ const int g_functionNameWidth = 32;
 
 int main(void)
 {
-    printf("Assignment 3 - LoopTrace_Instructions");
-    /*TraceBoth_StartLessEnd(0, 0);
+    TraceBoth_StartLessEnd(0, 0);
     TraceBoth_StartLessEnd(0, 1);
     TraceBoth_StartLessEnd(0, 2);
     TraceBoth_StartLessEnd(0, 3);
@@ -154,16 +171,16 @@ int main(void)
     TraceBoth_StartLessEnd(3, 3);
     TraceBoth_StartLessEnd(4, 3);
 
-    TraceBoth_StartLessEqualEnd(0, 0);
+   /* TraceBoth_StartLessEqualEnd(0, 0);
     TraceBoth_StartLessEqualEnd(0, 1);
     TraceBoth_StartLessEqualEnd(0, 2);
     TraceBoth_StartLessEqualEnd(0, 3);
     TraceBoth_StartLessEqualEnd(1, 3);
     TraceBoth_StartLessEqualEnd(2, 3);
     TraceBoth_StartLessEqualEnd(3, 3);
-    TraceBoth_StartLessEqualEnd(4, 3);
+    TraceBoth_StartLessEqualEnd(4, 3);*/
 
-    TraceBoth_StartGreaterEnd(0, 0);
+    /*TraceBoth_StartGreaterEnd(0, 0);
     TraceBoth_StartGreaterEnd(1, 0);
     TraceBoth_StartGreaterEnd(2, 0);
     TraceBoth_StartGreaterEnd(3, 0);
