@@ -1,0 +1,11 @@
+# Ignore Visual Studio files and folders
+.vs/
+x64/
+
+# Ignore all project-specific user settings and binaries
+*.vcxproj.user
+*.vcxproj.filters
+*.sln
+*.exe
+*.obj
+*.vcxproj

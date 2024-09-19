@@ -1,0 +1,15 @@
+Welcome to (Debug 32 bit) ProbeTypes.
+
+                     Type | sizeof |                       min |                       max |                   max + 1 |
+                     char |      1 |                      -128 |                       127 |                       128 |
+                    short |      2 |                    -32768 |                     32767 |                    -32768 |
+                      int |      4 |               -2147483648 |                2147483647 |               -2147483648 |
+                     long |      4 |               -2147483648 |                2147483647 |               -2147483648 |
+            unsigned char |      1 |                         0 |                       255 |                         0 |
+           unsigned short |      2 |                         0 |                     65535 |                         0 |
+             unsigned int |      4 |                         0 |                4294967295 |                         0 |
+            unsigned long |      4 |                         0 |                4294967295 |                         0 |
+                    float |      4 |                       N/A |                       N/A |                       N/A |
+                   double |      8 |                       N/A |                       N/A |                       N/A |
+                long long |      8 |      -9223372036854775808 |       9223372036854775807 |      -9223372036854775808 |
+       unsigned long long |      8 |                         0 |      18446744073709551615 |                         0 |
