@@ -52,22 +52,15 @@
 *           WhileTrace_StartLessEnd (2, 3) starting: 2 done!
 *           WhileTrace_StartLessEnd (3, 3) starting: done!
 *           WhileTrace_StartLessEnd (4, 3) starting: done!
-* 
-**            ForTrace_StartLessEnd (0, 0) starting: done!
-**          
-**            ForTrace_StartLessEnd (0, 1) starting: 0 done!
-**          
-**            ForTrace_StartLessEnd (0, 2) starting: 0 1 done!
-**          
-**            ForTrace_StartLessEnd (0, 3) starting: 0 1 2 done!
-**          
-**            ForTrace_StartLessEnd (1, 3) starting: 1 2 done!
-**          
-**            ForTrace_StartLessEnd (2, 3) starting: 2 done!
-**          
-**            ForTrace_StartLessEnd (3, 3) starting: done!
-**          
-**            ForTrace_StartLessEnd (4, 3) starting: done!
+*
+*			ForTrace_StartLessEnd (0, 0) starting: done!
+*           ForTrace_StartLessEnd (0, 1) starting: 0 done!
+*           ForTrace_StartLessEnd (0, 2) starting: 0 1 done!
+*			ForTrace_StartLessEnd (0, 3) starting: 0 1 2 done!
+*			ForTrace_StartLessEnd (1, 3) starting: 1 2 done!
+*			ForTrace_StartLessEnd (2, 3) starting: 2 done!
+*			ForTrace_StartLessEnd (3, 3) starting: done!
+*			ForTrace_StartLessEnd (4, 3) starting: done!
 **
 ** TESTING
 **
@@ -76,7 +69,7 @@
 ** redirecting the output to the test file via a command similar to this:
 **
 **   LoopTrace > LoopTrace.txt
-** 
+**
 ** GRADING
 **
 ** Two small components of the grade are worth noting...
@@ -85,10 +78,10 @@
 ** - Make your code conform to strict ANSI-C.
 **   - ANSI-C does not allow variable to be declared after statements in the same block of code.
 **   - ANSI-C does not allow declaring a variable in the for loop initializer. (C99 and C++ support this)
-* 
-* 
+*
+*
 * Date          Developer          Activities
-* 9/17/24       Don D              Started working on assignment3               
+* 9/17/24       Don D              Started working on assignment3
 */
 
 #include <stdio.h>
@@ -106,6 +99,7 @@
 */
 const int g_functionNameWidth = 32;
 
+
 /*
 ** TODO: Implement these functions.
 ** TODO: As a best practice, make unmodified parameters const to protect them from
@@ -114,40 +108,81 @@ const int g_functionNameWidth = 32;
 **       example test output above.
 */
 
-void WhileTrace_StartLessEnd(int start, int end)
+void WhileTrace_StartLessEnd(int start, const int end)
 {
-    printf("Starting: ");
-    while (start < end)
-    {
-        printf("%d ", start);
-        start++;
-    }
-    printf("done!\n");
+	char funcName[] = "WhileTrace_StartLessEnd";
+	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
+	while (start < end)
+	{
+		printf("%d ", start);
+		start++;
+	}
+	printf("done!\n");
 }
-//void WhileTrace_StartLessEqualEnd    (int start, int end);
+
+void ForTrace_StartLessEnd(int start, const int end)
+{
+	char funcName[] = "ForTrace_StartLessEnd";
+	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
+	for (start; start < end; start++)
+	{
+		printf("%d ", start);
+	}
+	printf("done!\n");
+
+}
+
+void WhileTrace_StartLessEqualEnd(int start, const int end)
+{
+	const char* funcName = "WhileTrace_StartLessEqualEnd"; /*pointer to a string literal, string literal stored in read-only part of memory*/
+	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
+	while (start <= end)
+	{
+		printf("%d ", start);
+		start++;
+	}
+	printf("done!\n");
+
+}
+
+void ForTrace_StartLessEqualEnd(int start, const int end)
+{
+	const char* funcName = "ForTrace_StartLessEqualEnd";
+	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
+	for (start; start <= end; start++)
+	{
+		printf("%d ", start);
+	}
+	printf("done!\n");
+
+}
+
 //void WhileTrace_StartGreaterEnd      (int start, int end);
 //void WhileTrace_StartGreaterEqualEnd (int start, int end);
-//void ForTrace_StartLessEnd           (int start, int end);
-//void ForTrace_StartLessEqualEnd      (int start, int end);
+
+
+
 //void ForTrace_StartGreaterEnd        (int start, int end);
 //void ForTrace_StartGreaterEqualEnd   (int start, int end);
 //
 ///* ---------------------------------------------- */
 ///* STUDENTS: Do not modify code below this point. */
 ///* ---------------------------------------------- */
-//
+
 void TraceBoth_StartLessEnd(const int start, const int end)
 {
-    WhileTrace_StartLessEnd(start, end);
-    //ForTrace_StartLessEnd(start, end);
+	WhileTrace_StartLessEnd(start, end);
+	ForTrace_StartLessEnd(start, end);
 }
-//
-//void TraceBoth_StartLessEqualEnd(const int start, const int end)
-//{
-//    WhileTrace_StartLessEqualEnd(start, end);
-//    ForTrace_StartLessEqualEnd(start, end);
-//}
-//
+
+
+
+void TraceBoth_StartLessEqualEnd(const int start, const int end)
+{
+	WhileTrace_StartLessEqualEnd(start, end);
+	ForTrace_StartLessEqualEnd(start, end);
+}
+
 //void TraceBoth_StartGreaterEnd(const int start, const int end)
 //{
 //    WhileTrace_StartGreaterEnd(start, end);
@@ -162,41 +197,41 @@ void TraceBoth_StartLessEnd(const int start, const int end)
 
 int main(void)
 {
-    TraceBoth_StartLessEnd(0, 0);
-    TraceBoth_StartLessEnd(0, 1);
-    TraceBoth_StartLessEnd(0, 2);
-    TraceBoth_StartLessEnd(0, 3);
-    TraceBoth_StartLessEnd(1, 3);
-    TraceBoth_StartLessEnd(2, 3);
-    TraceBoth_StartLessEnd(3, 3);
-    TraceBoth_StartLessEnd(4, 3);
+	TraceBoth_StartLessEnd(0, 0);
+	TraceBoth_StartLessEnd(0, 1);
+	TraceBoth_StartLessEnd(0, 2);
+	TraceBoth_StartLessEnd(0, 3);
+	TraceBoth_StartLessEnd(1, 3);
+	TraceBoth_StartLessEnd(2, 3);
+	TraceBoth_StartLessEnd(3, 3);
+	TraceBoth_StartLessEnd(4, 3);
 
-   /* TraceBoth_StartLessEqualEnd(0, 0);
-    TraceBoth_StartLessEqualEnd(0, 1);
-    TraceBoth_StartLessEqualEnd(0, 2);
-    TraceBoth_StartLessEqualEnd(0, 3);
-    TraceBoth_StartLessEqualEnd(1, 3);
-    TraceBoth_StartLessEqualEnd(2, 3);
-    TraceBoth_StartLessEqualEnd(3, 3);
-    TraceBoth_StartLessEqualEnd(4, 3);*/
+	TraceBoth_StartLessEqualEnd(0, 0);
+	TraceBoth_StartLessEqualEnd(0, 1);
+	TraceBoth_StartLessEqualEnd(0, 2);
+	TraceBoth_StartLessEqualEnd(0, 3);
+	TraceBoth_StartLessEqualEnd(1, 3);
+	TraceBoth_StartLessEqualEnd(2, 3);
+	TraceBoth_StartLessEqualEnd(3, 3);
+	TraceBoth_StartLessEqualEnd(4, 3);
 
-    /*TraceBoth_StartGreaterEnd(0, 0);
-    TraceBoth_StartGreaterEnd(1, 0);
-    TraceBoth_StartGreaterEnd(2, 0);
-    TraceBoth_StartGreaterEnd(3, 0);
-    TraceBoth_StartGreaterEnd(3, 1);
-    TraceBoth_StartGreaterEnd(3, 2);
-    TraceBoth_StartGreaterEnd(3, 3);
-    TraceBoth_StartGreaterEnd(3, 4);
+	/*TraceBoth_StartGreaterEnd(0, 0);
+	TraceBoth_StartGreaterEnd(1, 0);
+	TraceBoth_StartGreaterEnd(2, 0);
+	TraceBoth_StartGreaterEnd(3, 0);
+	TraceBoth_StartGreaterEnd(3, 1);
+	TraceBoth_StartGreaterEnd(3, 2);
+	TraceBoth_StartGreaterEnd(3, 3);
+	TraceBoth_StartGreaterEnd(3, 4);
 
-    TraceBoth_StartGreaterEqualEnd(0, 0);
-    TraceBoth_StartGreaterEqualEnd(1, 0);
-    TraceBoth_StartGreaterEqualEnd(2, 0);
-    TraceBoth_StartGreaterEqualEnd(3, 0);
-    TraceBoth_StartGreaterEqualEnd(3, 1);
-    TraceBoth_StartGreaterEqualEnd(3, 2);
-    TraceBoth_StartGreaterEqualEnd(3, 3);
-    TraceBoth_StartGreaterEqualEnd(3, 4);*/
+	TraceBoth_StartGreaterEqualEnd(0, 0);
+	TraceBoth_StartGreaterEqualEnd(1, 0);
+	TraceBoth_StartGreaterEqualEnd(2, 0);
+	TraceBoth_StartGreaterEqualEnd(3, 0);
+	TraceBoth_StartGreaterEqualEnd(3, 1);
+	TraceBoth_StartGreaterEqualEnd(3, 2);
+	TraceBoth_StartGreaterEqualEnd(3, 3);
+	TraceBoth_StartGreaterEqualEnd(3, 4);*/
 
-    return 0;
+	return 0;
 }
