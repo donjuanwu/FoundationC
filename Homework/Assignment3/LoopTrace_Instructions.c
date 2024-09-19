@@ -82,6 +82,8 @@
 *
 * Date          Developer          Activities
 * 9/17/24       Don D              Started working on assignment3
+* 9/18/24		Don D			   Create a string variable to hold function name using:
+*									1. character of array, 2. pointer to a constant character
 */
 
 #include <stdio.h>
@@ -110,7 +112,7 @@ const int g_functionNameWidth = 32;
 
 void WhileTrace_StartLessEnd(int start, const int end)
 {
-	char funcName[] = "WhileTrace_StartLessEnd";
+	char funcName[] = "WhileTrace_StartLessEnd"; /*create string using character of array. Let compiler determine array length*/
 	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
 	while (start < end)
 	{
@@ -124,12 +126,11 @@ void ForTrace_StartLessEnd(int start, const int end)
 {
 	char funcName[] = "ForTrace_StartLessEnd";
 	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
-	for (start; start < end; start++)
+	for (; start < end; start++)
 	{
 		printf("%d ", start);
 	}
 	printf("done!\n");
-
 }
 
 void WhileTrace_StartLessEqualEnd(int start, const int end)
@@ -149,7 +150,7 @@ void ForTrace_StartLessEqualEnd(int start, const int end)
 {
 	const char* funcName = "ForTrace_StartLessEqualEnd";
 	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
-	for (start; start <= end; start++)
+	for (; start <= end; start++)
 	{
 		printf("%d ", start);
 	}
@@ -157,14 +158,52 @@ void ForTrace_StartLessEqualEnd(int start, const int end)
 
 }
 
-//void WhileTrace_StartGreaterEnd      (int start, int end);
-//void WhileTrace_StartGreaterEqualEnd (int start, int end);
+void WhileTrace_StartGreaterEnd(int start, const int end)
+{
+	const char* funcName = "WhileTrace_StartGreaterEnd";
+	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
+	while (start > end)
+	{
+		printf("%d ", start);
+		start--;
+	}
+	printf("done!\n");
+}
+void ForTrace_StartGreaterEnd(int start, const int end)
+{
+	const char* funcName = "ForTrace_StartGreaterEnd";
+	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
+	for (; start > end; start--)
+	{
+		printf("%d ", start);
+	}
+	printf("done!\n");
+}
 
 
 
-//void ForTrace_StartGreaterEnd        (int start, int end);
-//void ForTrace_StartGreaterEqualEnd   (int start, int end);
-//
+void WhileTrace_StartGreaterEqualEnd(int start, const int end)
+{
+	const char* funcName = "WhileTrace_StartGreaterEqualEnd";
+	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
+	while (start >= end)
+	{
+		printf("%d ", start);
+		start--;
+	}
+	printf("done!\n");
+}
+void ForTrace_StartGreaterEqualEnd(int start, const int end)
+{
+	const char* funcName = "ForTrace_StartGreaterEqualEnd";
+	printf("%*s (%d, %d) starting: ", g_functionNameWidth, funcName, start, end);
+	for (; start >= end; start--)
+	{
+		printf("%d ", start);
+	}
+	printf("done!\n");
+}
+
 ///* ---------------------------------------------- */
 ///* STUDENTS: Do not modify code below this point. */
 ///* ---------------------------------------------- */
@@ -175,25 +214,24 @@ void TraceBoth_StartLessEnd(const int start, const int end)
 	ForTrace_StartLessEnd(start, end);
 }
 
-
-
 void TraceBoth_StartLessEqualEnd(const int start, const int end)
 {
 	WhileTrace_StartLessEqualEnd(start, end);
 	ForTrace_StartLessEqualEnd(start, end);
 }
 
-//void TraceBoth_StartGreaterEnd(const int start, const int end)
-//{
-//    WhileTrace_StartGreaterEnd(start, end);
-//    ForTrace_StartGreaterEnd(start, end);
-//}
-//
-//void TraceBoth_StartGreaterEqualEnd(const int start, const int end)
-//{
-//    WhileTrace_StartGreaterEqualEnd(start, end);
-//    ForTrace_StartGreaterEqualEnd(start, end);
-//}
+void TraceBoth_StartGreaterEnd(const int start, const int end)
+{
+	WhileTrace_StartGreaterEnd(start, end);
+	ForTrace_StartGreaterEnd(start, end);
+}
+
+
+void TraceBoth_StartGreaterEqualEnd(const int start, const int end)
+{
+    WhileTrace_StartGreaterEqualEnd(start, end);
+    ForTrace_StartGreaterEqualEnd(start, end);
+}
 
 int main(void)
 {
@@ -215,7 +253,7 @@ int main(void)
 	TraceBoth_StartLessEqualEnd(3, 3);
 	TraceBoth_StartLessEqualEnd(4, 3);
 
-	/*TraceBoth_StartGreaterEnd(0, 0);
+	TraceBoth_StartGreaterEnd(0, 0);
 	TraceBoth_StartGreaterEnd(1, 0);
 	TraceBoth_StartGreaterEnd(2, 0);
 	TraceBoth_StartGreaterEnd(3, 0);
@@ -231,7 +269,7 @@ int main(void)
 	TraceBoth_StartGreaterEqualEnd(3, 1);
 	TraceBoth_StartGreaterEqualEnd(3, 2);
 	TraceBoth_StartGreaterEqualEnd(3, 3);
-	TraceBoth_StartGreaterEqualEnd(3, 4);*/
+	TraceBoth_StartGreaterEqualEnd(3, 4);
 
 	return 0;
 }
