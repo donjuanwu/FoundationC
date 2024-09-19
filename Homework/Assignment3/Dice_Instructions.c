@@ -17,8 +17,8 @@
 **   Updated:   September 8, 2024
 **
 ** Student Solution
-**   Author:    --- Enter your name here ---
-**   Date:      --- Enter date here ---
+**   Author:    Don Dang
+**   Date:      9/18/24
 **
 ** INSTRUCTIONS
 **
@@ -103,7 +103,7 @@
 ** - HINT: Include a test case showing that 100% prints readably.
 ** - Copy your interactive output to Dice.txt.
 */
-
+#define _CRT_SECURE_NO_WARNINGS /*suppress Visual Studio scanf warnings*/
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -137,18 +137,22 @@ int g_tallyCount[NUM_SIDES_ON_DIE];
 /* Resets the g_tallyCount array to zero. */
 void InitializeTally(void)
 {
-    /* TODO: Implement this function */
+    unsigned int index;
+    for (index = 0; index < NUM_SIDES_ON_DIE; index++)
+    {
+        g_tallyCount[index] = 0;
+    }
 }
 
 /* Prints a summary of the roll statistics for one die. */
 /* TODO: Make parameter const unsigned int. */
-void PrintTally(int numRolls)
+void PrintTally(const unsigned int numRolls)
 {
     /* TODO: Implement this function */
 }
 
 /* TODO: Make parameter const unsigned int. */
-void RollTrusty(int numRolls)
+void RollTrusty(const unsigned int numRolls)
 {
     /* TODO: Implement this function
     **
@@ -159,7 +163,7 @@ void RollTrusty(int numRolls)
 }
 
 /* TODO: Make parameter const unsigned int. */
-void RollShady(int numRolls)
+void RollShady(const unsigned int numRolls)
 {
     /* TODO: Implement this function
     **
@@ -173,27 +177,27 @@ void RollShady(int numRolls)
 /* STUDENTS: Do not modify code below this point. */
 /* ---------------------------------------------- */
 
-//int main(void)
-//{
-//    /*
-//    ** srand() seeds (initializes) the random the number generator.
-//    ** Call it once per execution of the entire program.
-//    **
-//    ** Call rand() for each random number you wish to obtain from the random pool.
-//    ** Use the modulus (%) operator to constrain the values between 0 and N-1,
-//    ** where N is an integer of your choosing.
-//    */
-//    srand((unsigned int)(time(0)));
-//
-//    printf("How many times would you like to roll each %d sided die? ", NUM_SIDES_ON_DIE);
-//    {
-//        unsigned int numRolls = 0;
-//
-//        /* Before Module 4, it is OK to ignore warnings about ignoring scanf return value. */
-//        (void) scanf("%d", &numRolls);
-//
-//        RollTrusty(numRolls);
-//        RollShady(numRolls);
-//    }
-//    return 0;
-//}
+int main(void)
+{
+    /*
+    ** srand() seeds (initializes) the random the number generator.
+    ** Call it once per execution of the entire program.
+    **
+    ** Call rand() for each random number you wish to obtain from the random pool.
+    ** Use the modulus (%) operator to constrain the values between 0 and N-1,
+    ** where N is an integer of your choosing.
+    */
+    srand((unsigned int)(time(0)));
+
+    printf("How many times would you like to roll each %d sided die? ", NUM_SIDES_ON_DIE);
+    {
+        unsigned int numRolls = 0;
+
+        /* Before Module 4, it is OK to ignore warnings about ignoring scanf return value. */
+        (void) scanf("%d", &numRolls);
+
+        RollTrusty(numRolls);
+        RollShady(numRolls);
+    }
+    return 0;
+}

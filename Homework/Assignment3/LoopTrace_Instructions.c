@@ -77,7 +77,7 @@
 ** - Make your program output be identical to the example above.
 ** - Make your code conform to strict ANSI-C.
 **   - ANSI-C does not allow variable to be declared after statements in the same block of code.
-**   - ANSI-C does not allow declaring a variable in the for loop initializer. (C99 and C++ support this)
+**   - ANSI-C does not allow declaring a variable in the for loop initializer. (C99 and C++ support this)gig
 *
 *
 * Date          Developer          Activities
@@ -233,7 +233,7 @@ void TraceBoth_StartGreaterEqualEnd(const int start, const int end)
     ForTrace_StartGreaterEqualEnd(start, end);
 }
 
-int main(void)
+int main1(void)
 {
 	TraceBoth_StartLessEnd(0, 0);
 	TraceBoth_StartLessEnd(0, 1);
