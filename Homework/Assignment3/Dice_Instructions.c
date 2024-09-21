@@ -61,7 +61,12 @@
 **     Average number rolled: 3.27
 **   
 **   Shady Die (60 rolls): 253113153521615616125221424413165322425623446552446666545121
-**
+**   1 = 12
+*    2 = 12
+*    3 = 6
+*    4 = 9
+*    5 = 11
+*    6 = 10
 **     The  1 was rolled:    12 ( 20.00%)
 **     The  2 was rolled:    12 ( 20.00%)
 **     The  3 was rolled:     6 ( 10.00%)
@@ -118,8 +123,7 @@
 **
 ** TODO: Change this #define to an enum constant with the same name.
 */
-//#define NUM_SIDES_ON_DIE 6
-enum
+enum 
 {
     NUM_SIDES_ON_DIE = 6
 };
@@ -137,7 +141,6 @@ enum
 ** quantities that are known, by design, to be non-negative.
 */
 unsigned int g_tallyCount[NUM_SIDES_ON_DIE];
-const int g_TitleWidth = 10;
 
 /* Resets the g_tallyCount array to zero. */
 void InitializeTally(void)
@@ -157,9 +160,12 @@ void PrintTally(const unsigned int numRolls)
     unsigned int numRolled;
     unsigned int numSpaces = 5;
     float numRolledPercentage;
+    unsigned int totalNumRolledCount = 0;
+    float totalRolledPercentage = 0.0;
     for (index = 0; index < NUM_SIDES_ON_DIE; index++)
     {
         numRolled = g_tallyCount[index];
+        totalNumRolledCount += numRolled * (index + 1);
         if (g_tallyCount[index] == 0)
         {
             numRolledPercentage = 0.0;
@@ -167,9 +173,12 @@ void PrintTally(const unsigned int numRolls)
         else
         {
             numRolledPercentage = ((float)g_tallyCount[index] / numRolls) * 100;
-        }   
-        printf("%*s %d was rolled: %*d ( %*.2f%%)\n", numSpaces, "The", index + 1, numSpaces, numRolled, numSpaces, numRolledPercentage);
+        } 
+        totalRolledPercentage += numRolledPercentage;
+        printf("%*s %*d was rolled: %*d ( %*.2f%%)\n", numSpaces, "The", 2, index + 1, numSpaces, numRolled, numSpaces, numRolledPercentage);
     }
+    printf("%*s %*d (%*.2f%%) \n", 20, "TOTAL:", numSpaces, totalNumRolledCount, numSpaces, totalRolledPercentage);
+    printf("%*  Average number rolled: %*.2f\n", numSpaces + 10, 2, (float) totalNumRolledCount / numRolls);
 }
 
 /* TODO: Make parameter const unsigned int. */
@@ -181,9 +190,9 @@ void RollTrusty(const unsigned int numRolls)
     ** 2) Roll the die, printing as you go
     ** 3) Call PrintTally()
     */
-    
-    InitializeTally(); /*Call InitializeTally()*/
-    printf("%*s (%d rolls): ", g_TitleWidth, "Trusty Die", numRolls);
+    const unsigned int titleWidth = 10;
+    InitializeTally(); /*initialize global array to 0*/
+    printf("%*s (%d rolls): ", titleWidth, "Trusty Die", numRolls);
     unsigned int randNum;
     unsigned int index;
     for (index = 0; index < numRolls; index++)
@@ -206,7 +215,39 @@ void RollShady(const unsigned int numRolls)
     ** 2) Roll the die, printing as you go
     ** 3) Call PrintTally()
     */
-}
+    const unsigned int titleWidth = 10;
+    InitializeTally();
+    printf("%*s (%d rolls): ", titleWidth, "Shady Die", numRolls);
+    unsigned int randNum;
+    unsigned int index;
+    unsigned int skewedDice[NUM_SIDES_ON_DIE];
+    unsigned int numSkewed;
+
+    /*create skewd dice array*/
+    for (index = 0; index < NUM_SIDES_ON_DIE; index++)
+    {
+        if (index % 2 == 1)
+        {
+            skewedDice[index] = 2; /*assign 2 when index is odd*/
+        }
+        else
+        {
+            skewedDice[index] = index + 1; /*assign index one greater than its value*/
+        }
+        printf("\n");
+        printf("Index: %d, array[%d] = %d \n", index, index, skewedDice[index]);
+    }
+    for (index = 0; index < numRolls; index++)
+    {
+        randNum = rand() % NUM_SIDES_ON_DIE; /*generate random number from 0 up to NUM_SIDES_ON_DIE -1*/
+        printf("Random number: %d \n", randNum + 1);
+        numSkewed = skewedDice[randNum];
+        g_tallyCount[numSkewed - 1]++;
+        printf("Skewed number: %d \n", numSkewed);
+    }
+    printf("\n");
+    PrintTally(numRolls);
+ }
 
 /* ---------------------------------------------- */
 /* STUDENTS: Do not modify code below this point. */
@@ -231,8 +272,8 @@ int main(void)
         /* Before Module 4, it is OK to ignore warnings about ignoring scanf return value. */
         (void) scanf("%d", &numRolls);
 
-        RollTrusty(numRolls);
-        //RollShady(numRolls);
+        //RollTrusty(numRolls);
+        RollShady(numRolls);
     }
     return 0;
 }
