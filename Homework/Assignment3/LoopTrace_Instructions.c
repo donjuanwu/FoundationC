@@ -233,43 +233,43 @@ void TraceBoth_StartGreaterEqualEnd(const int start, const int end)
     ForTrace_StartGreaterEqualEnd(start, end);
 }
 
-int main1(void)
-{
-	TraceBoth_StartLessEnd(0, 0);
-	TraceBoth_StartLessEnd(0, 1);
-	TraceBoth_StartLessEnd(0, 2);
-	TraceBoth_StartLessEnd(0, 3);
-	TraceBoth_StartLessEnd(1, 3);
-	TraceBoth_StartLessEnd(2, 3);
-	TraceBoth_StartLessEnd(3, 3);
-	TraceBoth_StartLessEnd(4, 3);
-
-	TraceBoth_StartLessEqualEnd(0, 0);
-	TraceBoth_StartLessEqualEnd(0, 1);
-	TraceBoth_StartLessEqualEnd(0, 2);
-	TraceBoth_StartLessEqualEnd(0, 3);
-	TraceBoth_StartLessEqualEnd(1, 3);
-	TraceBoth_StartLessEqualEnd(2, 3);
-	TraceBoth_StartLessEqualEnd(3, 3);
-	TraceBoth_StartLessEqualEnd(4, 3);
-
-	TraceBoth_StartGreaterEnd(0, 0);
-	TraceBoth_StartGreaterEnd(1, 0);
-	TraceBoth_StartGreaterEnd(2, 0);
-	TraceBoth_StartGreaterEnd(3, 0);
-	TraceBoth_StartGreaterEnd(3, 1);
-	TraceBoth_StartGreaterEnd(3, 2);
-	TraceBoth_StartGreaterEnd(3, 3);
-	TraceBoth_StartGreaterEnd(3, 4);
-
-	TraceBoth_StartGreaterEqualEnd(0, 0);
-	TraceBoth_StartGreaterEqualEnd(1, 0);
-	TraceBoth_StartGreaterEqualEnd(2, 0);
-	TraceBoth_StartGreaterEqualEnd(3, 0);
-	TraceBoth_StartGreaterEqualEnd(3, 1);
-	TraceBoth_StartGreaterEqualEnd(3, 2);
-	TraceBoth_StartGreaterEqualEnd(3, 3);
-	TraceBoth_StartGreaterEqualEnd(3, 4);
-
-	return 0;
-}
+//int main(void)
+//{
+//	TraceBoth_StartLessEnd(0, 0);
+//	TraceBoth_StartLessEnd(0, 1);
+//	TraceBoth_StartLessEnd(0, 2);
+//	TraceBoth_StartLessEnd(0, 3);
+//	TraceBoth_StartLessEnd(1, 3);
+//	TraceBoth_StartLessEnd(2, 3);
+//	TraceBoth_StartLessEnd(3, 3);
+//	TraceBoth_StartLessEnd(4, 3);
+//
+//	TraceBoth_StartLessEqualEnd(0, 0);
+//	TraceBoth_StartLessEqualEnd(0, 1);
+//	TraceBoth_StartLessEqualEnd(0, 2);
+//	TraceBoth_StartLessEqualEnd(0, 3);
+//	TraceBoth_StartLessEqualEnd(1, 3);
+//	TraceBoth_StartLessEqualEnd(2, 3);
+//	TraceBoth_StartLessEqualEnd(3, 3);
+//	TraceBoth_StartLessEqualEnd(4, 3);
+//
+//	TraceBoth_StartGreaterEnd(0, 0);
+//	TraceBoth_StartGreaterEnd(1, 0);
+//	TraceBoth_StartGreaterEnd(2, 0);
+//	TraceBoth_StartGreaterEnd(3, 0);
+//	TraceBoth_StartGreaterEnd(3, 1);
+//	TraceBoth_StartGreaterEnd(3, 2);
+//	TraceBoth_StartGreaterEnd(3, 3);
+//	TraceBoth_StartGreaterEnd(3, 4);
+//
+//	TraceBoth_StartGreaterEqualEnd(0, 0);
+//	TraceBoth_StartGreaterEqualEnd(1, 0);
+//	TraceBoth_StartGreaterEqualEnd(2, 0);
+//	TraceBoth_StartGreaterEqualEnd(3, 0);
+//	TraceBoth_StartGreaterEqualEnd(3, 1);
+//	TraceBoth_StartGreaterEqualEnd(3, 2);
+//	TraceBoth_StartGreaterEqualEnd(3, 3);
+//	TraceBoth_StartGreaterEqualEnd(3, 4);
+//
+//	return 0;
+//}

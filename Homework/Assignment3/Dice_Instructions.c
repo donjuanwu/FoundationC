@@ -133,6 +133,7 @@
 ** quantities that are known, by design, to be non-negative.
 */
 int g_tallyCount[NUM_SIDES_ON_DIE];
+const int g_TitleWidth = 10;
 
 /* Resets the g_tallyCount array to zero. */
 void InitializeTally(void)
@@ -160,6 +161,17 @@ void RollTrusty(const unsigned int numRolls)
     ** 2) Roll the die, printing as you go
     ** 3) Call PrintTally()
     */
+    
+    InitializeTally(); /*Call InitializeTally()*/
+    printf("%*s (%d rolls): ", g_TitleWidth, "Trusty Die", numRolls);
+    unsigned int randNum;
+    unsigned int index;
+    for (index = 0; index < numRolls; index++)
+    {
+        randNum = rand() % NUM_SIDES_ON_DIE + 1;
+        printf("%d", randNum);
+    }
+    
 }
 
 /* TODO: Make parameter const unsigned int. */
@@ -197,7 +209,7 @@ int main(void)
         (void) scanf("%d", &numRolls);
 
         RollTrusty(numRolls);
-        RollShady(numRolls);
+        //RollShady(numRolls);
     }
     return 0;
 }
