@@ -240,10 +240,10 @@ void RollShady(const unsigned int numRolls)
     for (index = 0; index < numRolls; index++)
     {
         randNum = rand() % NUM_SIDES_ON_DIE; /*generate random number from 0 up to NUM_SIDES_ON_DIE -1*/
-        printf("Random number: %d \n", randNum + 1);
-        numSkewed = skewedDice[randNum];
+        /*printf("Random number: %d \n", randNum + 1); */ /*debug: display true random number*/
+        numSkewed = skewedDice[randNum]; /*get the weighted value*/
         g_tallyCount[numSkewed - 1]++;
-        printf("Skewed number: %d \n", numSkewed);
+        printf("%d \n", numSkewed);
     }
     printf("\n");
     PrintTally(numRolls);
