@@ -61,7 +61,7 @@
 **     Average number rolled: 3.27
 **   
 **   Shady Die (60 rolls): 253113153521615616125221424413165322425623446552446666545121
-**   
+**
 **     The  1 was rolled:    12 ( 20.00%)
 **     The  2 was rolled:    12 ( 20.00%)
 **     The  3 was rolled:     6 ( 10.00%)
@@ -69,7 +69,7 @@
 **     The  5 was rolled:    11 ( 18.33%)
 **     The  6 was rolled:    10 ( 16.67%)
 **                 TOTAL:   205 (100.00%)
-**   
+**
 **     Average number rolled: 3.42
 **
 ** DESIGN GUIDELINES
@@ -118,7 +118,11 @@
 **
 ** TODO: Change this #define to an enum constant with the same name.
 */
-#define NUM_SIDES_ON_DIE 6
+//#define NUM_SIDES_ON_DIE 6
+enum
+{
+    NUM_SIDES_ON_DIE = 6
+};
 
 /*
 ** Stores the count (number of times) each number is rolled.
@@ -132,7 +136,7 @@
 ** TODO: Make this unsigned.  A best practice in C/C++: Use unsigned types for
 ** quantities that are known, by design, to be non-negative.
 */
-int g_tallyCount[NUM_SIDES_ON_DIE];
+unsigned int g_tallyCount[NUM_SIDES_ON_DIE];
 const int g_TitleWidth = 10;
 
 /* Resets the g_tallyCount array to zero. */
@@ -149,7 +153,23 @@ void InitializeTally(void)
 /* TODO: Make parameter const unsigned int. */
 void PrintTally(const unsigned int numRolls)
 {
-    /* TODO: Implement this function */
+    unsigned int index;
+    unsigned int numRolled;
+    unsigned int numSpaces = 5;
+    float numRolledPercentage;
+    for (index = 0; index < NUM_SIDES_ON_DIE; index++)
+    {
+        numRolled = g_tallyCount[index];
+        if (g_tallyCount[index] == 0)
+        {
+            numRolledPercentage = 0.0;
+        }
+        else
+        {
+            numRolledPercentage = ((float)g_tallyCount[index] / numRolls) * 100;
+        }   
+        printf("%*s %d was rolled: %*d ( %*.2f%%)\n", numSpaces, "The", index + 1, numSpaces, numRolled, numSpaces, numRolledPercentage);
+    }
 }
 
 /* TODO: Make parameter const unsigned int. */
@@ -168,9 +188,12 @@ void RollTrusty(const unsigned int numRolls)
     unsigned int index;
     for (index = 0; index < numRolls; index++)
     {
-        randNum = rand() % NUM_SIDES_ON_DIE + 1;
-        printf("%d", randNum);
+        randNum = rand() % NUM_SIDES_ON_DIE;
+        g_tallyCount[randNum]++;
+        printf("%d", randNum + 1);
     }
+    printf("\n");
+    PrintTally(numRolls);
     
 }
 
