@@ -1,0 +1,6 @@
+    IntPow (   -10,   0) =               1 (expected               1)
+    IntPow (    10,   0) =               1 (expected               1)
+    IntPow (    10,   1) =              10 (expected              10)
+    IntPow (    10,   9) =      1000000000 (expected      1000000000)
+    IntPow (   -10,   9) =     -1000000000 (expected     -1000000000)
+    IntPow (     3,  19) =      1162261467 (expected      1162261467)

@@ -121,7 +121,7 @@
 */
 enum 
 {
-    NUM_SIDES_ON_DIE = 10
+    NUM_SIDES_ON_DIE = 6
 };
 
 /*
@@ -174,7 +174,7 @@ void PrintTally(const unsigned int numRolls)
         printf("%*s %*d was rolled: %*d ( %*.2f%%)\n", numSpaces, "The", 2, index + 1, numSpaces, numRolled, numSpaces, numRolledPercentage);
     }
     printf("%*s %*d (%*.2f%%) \n", 20, "TOTAL:", numSpaces, totalNumRolledCount, numSpaces, totalRolledPercentage);
-    printf("%*  Average number rolled: %*.2f\n", numSpaces + 10, 2, (float) totalNumRolledCount / numRolls);
+    printf("%*s  %*.2f\n", numSpaces + 19, "Average number rolled:", 2, (float)totalNumRolledCount / numRolls);
 
 }
 
@@ -254,27 +254,27 @@ void RollShady(const unsigned int numRolls)
 /* STUDENTS: Do not modify code below this point. */
 /* ---------------------------------------------- */
 
-int main(void)
-{
-    /*
-    ** srand() seeds (initializes) the random the number generator.
-    ** Call it once per execution of the entire program.
-    **
-    ** Call rand() for each random number you wish to obtain from the random pool.
-    ** Use the modulus (%) operator to constrain the values between 0 and N-1,
-    ** where N is an integer of your choosing.
-    */
-    srand((unsigned int)(time(0)));
-
-    printf("How many times would you like to roll each %d sided die? ", NUM_SIDES_ON_DIE);
-    {
-        unsigned int numRolls = 0;
-
-        /* Before Module 4, it is OK to ignore warnings about ignoring scanf return value. */
-        (void) scanf("%d", &numRolls);
-
-        RollTrusty(numRolls);
-        RollShady(numRolls);
-    }
-    return 0;
-}
+//int main(void)
+//{
+//    /*
+//    ** srand() seeds (initializes) the random the number generator.
+//    ** Call it once per execution of the entire program.
+//    **
+//    ** Call rand() for each random number you wish to obtain from the random pool.
+//    ** Use the modulus (%) operator to constrain the values between 0 and N-1,
+//    ** where N is an integer of your choosing.
+//    */
+//    srand((unsigned int)(time(0)));
+//
+//    printf("How many times would you like to roll each %d sided die? ", NUM_SIDES_ON_DIE);
+//    {
+//        unsigned int numRolls = 0;
+//
+//        /* Before Module 4, it is OK to ignore warnings about ignoring scanf return value. */
+//        (void) scanf("%d", &numRolls);
+//
+//        RollTrusty(numRolls);
+//        RollShady(numRolls);
+//    }
+//    return 0;
+//}

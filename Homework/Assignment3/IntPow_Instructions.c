@@ -17,8 +17,8 @@
 **   Updated:   September 8, 2024
 **
 ** Student Solution
-**   Author:    --- Enter your name here ---
-**   Date:      --- Enter date here ---
+**   Author:    Don Dang
+**   Date:      9/21/24
 **
 ** INSTRUCTIONS
 **
@@ -56,16 +56,108 @@
 **   IntPow (  2, 3) =     8 (expected     8)
 **   IntPow ( 10, 0) =     1 (expected     1)
 **   IntPow ( 10, 1) =    10 (expected    10)
+* 
+* Date      Developer       Activities
+* 9/21/24   Don D           Added #include <stdio.h>
+* 
 */
+#include <stdio.h>
 
 /* TODO: Implement the calculation.  Note that this function does not print. */
 /* TODO: Make both parameters const. */
-int IntPow(int base, unsigned int power);
+int IntPow(const int base, const unsigned int power)
+{
+    if (base == 0 && power == 0)
+    {
+        return 1; /*define 0^0 as 1 for practical purposes*/
+    }
+    
+    if (power == 0)
+    {
+        return 1; /*any base to the power of 0 is 1*/
+       
+    }
+    /*
+    * create scope variables
+    * exponent is greater than 0
+    */
+    { 
 
-//int main(void)
-//{
-//    /* TODO: Your test cases go here. */
-//    /* TODO: There is an opportunity to consolidate repetitious printf code. */
-//
-//    return 0;
-//}
+        int result = 1; 
+        int index = 0;
+        for (; index < power; index++)
+        {
+            result *= base;
+        }
+        return result;
+    };
+    
+}
+void PrintIntPowerResult(const int base, const unsigned int power, const int result, const int expected)
+{
+    unsigned int numSpaces = 10;
+    char funcName[] = "IntPow";
+    printf("%*s (   %3d, %3d) = %*d (expected %*d)\n", numSpaces, funcName, base, power, numSpaces + 5, result, numSpaces + 5, expected);
+}
+
+int main(void)
+{
+    /* TODO: Your test cases go here. */
+    /* TODO: There is an opportunity to consolidate repetitious printf code. */
+    int base;
+    unsigned int power;
+    int result;
+    int expected;
+    unsigned int numSpaces = 10;
+    char funcName[] = "IntPow";
+
+    base = -10;
+    power = 0;
+    result = IntPow(base, power);
+    expected = 1;
+    PrintIntPowerResult(base, power, result, expected);
+    
+    base = 10;
+    power = 0;
+    result = IntPow(base, power);
+    expected = 1;
+    PrintIntPowerResult(base, power, result, expected);
+
+    base = 10;
+    power = 1;
+    result = IntPow(base, power);
+    expected = 10;
+    PrintIntPowerResult(base, power, result, expected);
+
+    /* test postive int max value: 2,147,483,647
+    *  b^e < 2,147,483,647
+    */
+    base = 10;
+    power = 9;
+    result = IntPow(base, power);
+    expected = 1000000000;
+    PrintIntPowerResult(base, power, result, expected);
+
+    /* test negaive int max value: -2,147,483,648
+   *  b^e > -2,147,483,648
+   */
+    base = -10;
+    power = 9;
+    result = IntPow(base, power);
+    expected = -1000000000;
+    PrintIntPowerResult(base, power, result, expected);
+
+    /* test postive unsigned int max value: 4,294,967,295
+    *  b^e < 4,294,967,295
+    */
+    base = 3;
+    power = 19;
+    result = IntPow(base, power);
+    expected = 1162261467;
+    PrintIntPowerResult(base, power, result, expected);
+
+
+  
+
+    return 0;
+}
