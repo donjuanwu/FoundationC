@@ -61,12 +61,6 @@
 **     Average number rolled: 3.27
 **   
 **   Shady Die (60 rolls): 253113153521615616125221424413165322425623446552446666545121
-**   1 = 12
-*    2 = 12
-*    3 = 6
-*    4 = 9
-*    5 = 11
-*    6 = 10
 **     The  1 was rolled:    12 ( 20.00%)
 **     The  2 was rolled:    12 ( 20.00%)
 **     The  3 was rolled:     6 ( 10.00%)
@@ -107,6 +101,8 @@
 ** - Show correct verticle alignment for differnt number of digits for both counts and percentages.
 ** - HINT: Include a test case showing that 100% prints readably.
 ** - Copy your interactive output to Dice.txt.
+* Date      Developer       Activities
+* 0/20/24   Don D           Added #define _CRT_SECURE_NO_WARNINGS to suppress scanf waring from Visual Studio
 */
 #define _CRT_SECURE_NO_WARNINGS /*suppress Visual Studio scanf warnings*/
 #include <stdio.h>
@@ -125,7 +121,7 @@
 */
 enum 
 {
-    NUM_SIDES_ON_DIE = 6
+    NUM_SIDES_ON_DIE = 10
 };
 
 /*
@@ -179,6 +175,7 @@ void PrintTally(const unsigned int numRolls)
     }
     printf("%*s %*d (%*.2f%%) \n", 20, "TOTAL:", numSpaces, totalNumRolledCount, numSpaces, totalRolledPercentage);
     printf("%*  Average number rolled: %*.2f\n", numSpaces + 10, 2, (float) totalNumRolledCount / numRolls);
+
 }
 
 /* TODO: Make parameter const unsigned int. */
@@ -220,31 +217,35 @@ void RollShady(const unsigned int numRolls)
     printf("%*s (%d rolls): ", titleWidth, "Shady Die", numRolls);
     unsigned int randNum;
     unsigned int index;
-    unsigned int skewedDice[NUM_SIDES_ON_DIE];
+    
     unsigned int numSkewed;
 
-    /*create skewd dice array*/
-    for (index = 0; index < NUM_SIDES_ON_DIE; index++)
+    if (NUM_SIDES_ON_DIE == 10)
     {
-        if (index % 2 == 1)
+        unsigned int skewedDice[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 2, 2, 2};
+        unsigned int arraySize = sizeof(skewedDice) / sizeof(skewedDice[0]);
+        for (index = 0; index < numRolls; index++)
         {
-            skewedDice[index] = 2; /*assign 2 when index is odd*/
+            randNum = rand() % arraySize; /*generate random number from 0 up to arraySize -1*/
+            numSkewed = skewedDice[randNum]; /*get the weighted value*/
+            g_tallyCount[numSkewed - 1]++;
+            printf("%d", numSkewed);
         }
-        else
-        {
-            skewedDice[index] = index + 1; /*assign index one greater than its value*/
-        }
-        printf("\n");
-        printf("Index: %d, array[%d] = %d \n", index, index, skewedDice[index]);
     }
-    for (index = 0; index < numRolls; index++)
+    else /*6 sided dice*/
     {
-        randNum = rand() % NUM_SIDES_ON_DIE; /*generate random number from 0 up to NUM_SIDES_ON_DIE -1*/
-        /*printf("Random number: %d \n", randNum + 1); */ /*debug: display true random number*/
-        numSkewed = skewedDice[randNum]; /*get the weighted value*/
-        g_tallyCount[numSkewed - 1]++;
-        printf("%d \n", numSkewed);
+        unsigned int skewedDice[] = { 1, 2, 3, 4, 5, 6, 2, 2, 2, 2 };
+        unsigned int arraySize = sizeof(skewedDice) / sizeof(skewedDice[0]);
+        for (index = 0; index < numRolls; index++)
+        {
+            randNum = rand() % arraySize; /*generate random number from 0 up to arraySize -1*/
+            numSkewed = skewedDice[randNum]; /*get the weighted value*/
+            g_tallyCount[numSkewed - 1]++;
+            printf("%d", numSkewed);
+        }
+
     }
+
     printf("\n");
     PrintTally(numRolls);
  }
@@ -272,7 +273,7 @@ int main(void)
         /* Before Module 4, it is OK to ignore warnings about ignoring scanf return value. */
         (void) scanf("%d", &numRolls);
 
-        //RollTrusty(numRolls);
+        RollTrusty(numRolls);
         RollShady(numRolls);
     }
     return 0;
