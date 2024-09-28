@@ -122,7 +122,25 @@ int GetUserSeatInput(void)
 				}
 				else /* 3rd character entered*/
 				{
+					/*validate seat number selected is 1A = (49 + 65)*/
+					if (convertSeatCharToInt >= 114)
+					{
+						unsigned int numSeat = (convertSeatCharToInt % 65) - 48; /*calc numeric value*/
+						char ch = 'A';
+						printf("Your seat number can't be higher: %d%c", numSeat, ch);
+						
+					}
+					else
+					{
+						if (toupper(seat[index]) < 65 || toupper(seat[index]) > 68)
+						{
+							printf("3rd character, seat number is not valid: %c", toupper(seat[index]));
+							return INVALID_SEATS;
+						}
+						printf("Your seat number is valid");
 
+					}
+					
 				}
 			}
 			
@@ -159,7 +177,7 @@ int GetUserSeatInput(void)
 			//	return INVALID_SEATS;
 			//}
 
-			printf("%c", toupper(seat[index]));
+			//printf("%c", toupper(seat[index]));
 			index++;
 		}
 	}
