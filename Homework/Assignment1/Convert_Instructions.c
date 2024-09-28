@@ -142,6 +142,58 @@
 /* Do NOT include any other header files.  Do NOT include <math.h>.  */
 #include <stdio.h>
 
+/*
+    Function to manually calculate the floor of a number
+    If num is positive or exactly an integer, just reutn intPart
+    Otherwise, for negative numbers with a decimal part, substract 1
+
+    Expected:
+    1. 33 fahrenheit is 0 celsius
+    2. 1 celsius is 33 fahrenheit
+*/
+int ManualIntRoundDown(double num)
+{
+    int intPart = (int)num; /* get the integer part*/
+    if (num >= 0)
+    {
+        return intPart;
+    }
+    if (num < intPart)
+    {
+        return intPart - 1;
+    }
+    return intPart;
+
+}
+
+int ManualIntRoundedCorrectlyUsingFloat(double num)
+{
+
+    int intPart = (int)(num);
+    double fractionalPart = num - intPart;
+
+    if (fractionalPart >= 0.5)
+    {
+        return intPart + 1;
+    }
+    return intPart;
+}
+
+/*
+    Function to manually calculate the ceiling of a number
+    If the numjber is positive and has a decimal part, add 1 to the integer part
+    If the number is already an integer, return the integer part
+*/
+int ManualRoundUp(float num)
+{
+    int intPart = (int)num;
+    if (num > intPart)
+    {
+        return intPart + 1;
+    }
+    return intPart;
+}
+
 
 float FahrenheitToCelsius_AccurateFloat(int fahrenheit)
 {
@@ -271,44 +323,9 @@ int PromptForTemperature(char* tempType) {
 
 }
 
-/*
-    Function to manually calculate the floor of a number
-    If num is positive or exactly an integer, just reutn intPart
-    Otherwise, for negative numbers with a decimal part, substract 1
 
-    Expected:
-    1. 33 fahrenheit is 0 celsius
-    2. 1 celsius is 33 fahrenheit
-*/
-int ManualIntRoundDown(double num)
-{
-    int intPart = (int)num; /* get the integer part*/
-    if (num >= 0)
-    {
-        return intPart;
-    }
-    if (num < intPart)
-    {
-        return intPart - 1;
-    }
-    return intPart;
 
-}
 
-/*
-    Function to manually calculate the ceiling of a number
-    If the numjber is positive and has a decimal part, add 1 to the integer part
-    If the number is already an integer, return the integer part
-*/
-int ManualRoundUp(float num)
-{
-    int intPart = (int)num;
-    if (num > intPart)
-    {
-        return intPart + 1;
-    }
-    return intPart;
-}
 
 /*
     Function to manaully calculate the rounded (up or down) int correctly
@@ -325,18 +342,7 @@ int ManualRoundUp(float num)
     2. 1 celsius is 34 fahrenheit
 
 */
-int ManualIntRoundedCorrectlyUsingFloat(double num)
-{
-  
-    int intPart = (int)(num); 
-    double fractionalPart = num - intPart; 
 
-    if (fractionalPart >= 0.5) 
-    {
-        return intPart + 1;
-    }
-     return intPart; 
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////Test Fahrenheit///////////////////////////////////////

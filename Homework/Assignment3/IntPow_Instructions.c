@@ -82,10 +82,9 @@ int IntPow(const int base, const unsigned int power)
     * exponent is greater than 0
     */
     { 
-
         int result = 1; 
-        int index = 0;
-        for (; index < power; index++)
+        unsigned int index = 0;
+        for (index = 0; index < power; index++)
         {
             result *= base;
         }
@@ -155,9 +154,6 @@ int main(void)
     result = IntPow(base, power);
     expected = 1162261467;
     PrintIntPowerResult(base, power, result, expected);
-
-
-  
 
     return 0;
 }
