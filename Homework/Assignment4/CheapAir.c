@@ -214,17 +214,38 @@ int g_reservations[NUM_SEATS];
 ******************************************Helper Functions********************************************************
 ******************************************************************************************************************
 */
+
+/**
+ * @brief Prints an explanation of the seating arrangement on the plane.
+ *
+ * This function displays details about the airplane's seating arrangement,
+ * including the number of rows, how the seats are labeled (A-D), and how guests
+ * can reserve a seat. It explains that the plane has 12 rows and each row contains
+ * 4 seats labeled from A to D.
+ */
 void PrintReserveSeatExplanation(void)
 {
-    printf("Welcome to CheapAir. We are in the business of providing air travel service to our guests at affordable price. \n");
-    printf("Our plane has 12 rows of seats starting from  row 1 (front of airplane) - row 12 (back of airplane) \n");
-    printf("Each row has 4 seats. Each seat has an assigned letter from A - D. \n");
-    printf("The seat letter read from right (A) to left (D) as you look toward the back of the plane. \n");
-    printf("We are happy to accomodate your seating arrangement. \n");
-    printf("You may reserve a seat by entering the seat row follow by the seat assigned letter like 12A. 12th row and colum A \n");
+    printf("Welcome to CheapAir, where we offer affordable air travel services to our valued guests.\n");
+    printf("Our plane has 12 rows of seats, starting from row 1 at the front to row 12 at the back.\n");
+    printf("Each row contains 4 seats, labeled A through D.\n");
+    printf("The seat letters are arranged from left (A) to right (D) as you face the back of the plane.\n");
+    printf("We are pleased to accommodate your seating preferences.\n");
+    printf("To reserve a seat, simply enter the row number followed by the seat letter (e.g., 12A for the 12th row, seat A).\n");
 }
 
 
+/**
+ * @brief Converts a seat's row and letter into a seat index.
+ *
+ * This function converts a seat's row number and letter (A-D) into a corresponding
+ * seat index in a 12-row, 4-column seating arrangement. The seat letters 'A', 'B', 'C', 'D'
+ * are mapped to offsets 0, 1, 2, and 3, respectively. The function returns the index
+ * of the seat in the seating arrangement or an invalid seat constant if the input is out of bounds.
+ *
+ * @param row The row number of the seat (between 1 and 12).
+ * @param seatLetter The letter of the seat ('A', 'B', 'C', or 'D').
+ * @return The index of the seat in the array, or INVALID_SEAT if the row or seat letter is invalid.
+ */
 int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
 {
     unsigned int rowLow = 1;
@@ -243,7 +264,6 @@ int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
         return INVALID_SEAT;
     }
 
-    /*scope of local variables*/
     {
         unsigned int column = 4;
         unsigned int index = (row - 1) * column + letterOffSet;
@@ -251,9 +271,13 @@ int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
     }
 
 }
-/*
-
-*/
+/**
+ * @brief Clears the input buffer to handle invalid input.
+ *
+ * This function reads and discards all characters in the input buffer until a newline
+ * character or end-of-file (EOF) is encountered. It is used to clear any leftover input
+ * after an invalid entry or when flushing the input buffer is necessary.
+ */
 void ClearInputBuffer(void)
 {
     int ch;
