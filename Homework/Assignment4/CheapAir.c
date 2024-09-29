@@ -208,6 +208,62 @@ const int INVALID_SEAT = -1;
 */
 int g_reservations[NUM_SEATS];
 
+
+/*
+******************************************************************************************************************
+******************************************Helper Functions********************************************************
+******************************************************************************************************************
+*/
+void PrintReserveSeatExplanation(void)
+{
+    printf("Welcome to CheapAir. We are in the business of providing air travel service to our guests at affordable price. \n");
+    printf("Our plane has 12 rows of seats starting from  row 1 (front of airplane) - row 12 (back of airplane) \n");
+    printf("Each row has 4 seats. Each seat has an assigned letter from A - D. \n");
+    printf("The seat letter read from right (A) to left (D) as you look toward the back of the plane. \n");
+    printf("We are happy to accomodate your seating arrangement. \n");
+    printf("You may reserve a seat by entering the seat row follow by the seat assigned letter like 12A. 12th row and colum A \n");
+}
+
+
+int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
+{
+    unsigned int rowLow = 1;
+    unsigned int rowHigh = 12;
+    unsigned int letterLow = 0;
+    unsigned int letterHigh = 3;
+
+    if (row < rowLow || row > rowHigh)
+    {
+        return INVALID_SEAT;
+    }
+    
+    unsigned int letterOffSet = toupper(seatLetter) - 'A'; /*convert seat letter to offset index (A = 0, B = 1, C = 2, D = 3*/
+    if (letterOffSet < letterLow || letterOffSet > letterHigh)
+    {
+        return INVALID_SEAT;
+    }
+
+    /*scope of local variables*/
+    {
+        unsigned int column = 4;
+        unsigned int index = (row - 1) * column + letterOffSet;
+        return index;
+    }
+
+}
+/*
+
+*/
+void ClearInputBuffer(void)
+{
+    int ch;
+    while ((ch = getchar()) != '\n' && (ch != EOF)); /*flush input buffer*/
+}
+
+
+
+/*******************************************************************************************************************/
+
 /*
 ** Clears g_reservations so that all seats are empty.
 ** Sets the passenger ID to 0 for all seats in the array.
@@ -224,43 +280,6 @@ void ClearReservations(void)
 
 
 }
-
-void PrintReserveSeatExplanation(void)
-{
-    printf("Welcome to CheapAir. We are in the business of providing air travel service to our guests at affordable price. \n");
-    printf("Our plane has 12 rows of seats starting from  row 1 (front of airplane) - row 12 (back of airplane) \n");
-    printf("Each row has 4 seats. Each seat has an assigned letter from A - D. \n");
-    printf("The seat letter read from right (A) to left (D) as you look toward the back of the plane. \n");
-    printf("We are happy to accomodate your seating arrangement. \n");
-    printf("You may reserve a seat by entering the seat row follow by the seat assigned letter like 12A. 12th row and colum A \n");
-}
-
-int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
-{
-    unsigned int rowLow = 1;
-    unsigned int rowHigh = 12;
-    unsigned int letterLow = 0;
-    unsigned int letterHigh = 3;
-
-    if (row < rowLow || row > rowHigh)
-    {
-        return INVALID_SEAT;
-    }
-    /*convert seat letter to offset index (A = 0, B = 1, C = 2, D = 3*/
-    unsigned int letterOffSet = toupper(seatLetter) - 'A';
-    if (letterOffSet < letterLow || letterOffSet > letterHigh)
-    {
-        return INVALID_SEAT;
-    }
-    {
-        unsigned int column = 4;
-        unsigned int index = (row - 1) * column + letterOffSet;
-        return index;
-    }
-
-}
-
-
 
 
 /*
@@ -282,14 +301,46 @@ int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
 ** 
 ** STUDENTS: Remember that integers and characters in C are related,
 **           and arithmetic can be done on both.
+** Notes:
+*  1. Calculate 0 base index
+*   index = (row -1) * 4 + offset
+*  2. Calculate letter value in number format
+*   intLetter = seatIndex % 4
+*  3. Calculate seat row in human-readable format
+*    row = ( (index - offset) / 4 ) + 1
 */
 void PrintSeatName(int seat)
 {
-    /* TODO: Delete this line.  It supresses the warning about an unused argument.  */
-    seat;
+    if (seat < 0)
+    {
+        printf("Invalid seat index: %d\n", seat);
+    }
+    else
+    {
+        unsigned int column = 4;
+        unsigned int intLetter = seat % column;
+        unsigned int row = ((seat - intLetter) / column) + 1;
+        char letter;
+        switch (intLetter)
+        {
+        case 0: 
+            letter = 'A';
+            break;
+        case 1:
+            letter = 'B';
+            break;
+        case 2:
+            letter = 'C';
+            break;
+        default:
+            letter = 'D';
+            break;
+        }
+        /* TODO: Implement this function. */
+        printf("Seat %d%c is now occupied by passenger ", row, letter);
+    }
 
-    /* TODO: Implement this function. */
-    printf("XX");
+
 }
 
 /*
@@ -327,8 +378,7 @@ int GetSeatInput(void)
     char letter = '\0'; /*hold seat letter A - D*/
 
     unsigned int itemsRead;
-    printf("Enter a seat to reserve: ");
-    itemsRead = scanf("%3[^\n]", seat); /*limit the input to just 3 characters to prevent buffer overflow*/
+    itemsRead = scanf("%3s", seat); /*limit the input to just 3 characters to prevent buffer overflow*/
     if (itemsRead != 1)
     {
         printf("Invalid - no input \n");
@@ -389,7 +439,7 @@ int GetSeatInput(void)
     }
 
     int seatIndex = convertSeatNumToSeatIndex(row, letter); /*convert user reserve seat to 0 base index*/
-    printf("Converted seat to 0 base index: %d", seatIndex);
+    printf("Converted seat is index: %d\n", seatIndex);
     return seatIndex;
 
 }
@@ -486,16 +536,18 @@ int GetEmptySeatFromUser(void)
 */
 int GetPassengerIdFromUser(void)
 {
-    char id[4];
+    char id[5];
     unsigned int itemsRead;
     unsigned int index;
-    unsigned int pID = 0; 
+    unsigned int pID = 0;
     unsigned int minID = 0;
     unsigned int maxID = 999;
+    int isBreak; /*flag break out of while loop*/
     for (;;)
     {
+        isBreak = 0; /*initialize to false*/
         printf("Enter passenger ID between 1 and 999: ");
-        itemsRead = scanf("%3s", id);
+        itemsRead = scanf("%4s[^\n]", id);
         if (itemsRead == 1)
         {
             pID = 0;
@@ -508,46 +560,54 @@ int GetPassengerIdFromUser(void)
                     if (id[index] <= zero || !isdigit(id[index]))
                     {
                         printf("ERROR: ID must be an integer between 1 and 999 \n");
+                        ClearInputBuffer();
+                        isBreak = 1;
                         break;
                     }
                     pID += (id[index] - zero); /*keep running number of passenger ID*/
 
                 }
-                else if (index == 1) /*2nd character*/
+                else
                 {
-                    if (!isdigit(id[index])) /*not a digit character*/
+                    if (index > 2) /*entered passenger ID greater than 3 characters*/
                     {
                         printf("ERROR: ID must be an integer between 1 and 999 \n");
+                        ClearInputBuffer();
+                        isBreak = 1;
                         break;
                     }
-                    pID += (id[index] - zero) * 10; /*keep running number of passenger ID*/
+                    else if (!isdigit(id[index])) /*non-digit entered*/
+                    {
+                        printf("ERROR: ID must be an integer between 1 and 999 \n");
+                        ClearInputBuffer();
+                        isBreak = 1;
+                        break;
+                    }
+                    pID *= 10; /*shift current entered number to the right by 10 */
+                    pID += (id[index] - zero); /*keep running number of passenger ID*/
+                }
 
-                }
-                else /*3rd character*/
-                {
-                    if (!isdigit(id[index])) /*not a digit character*/
-                    {
-                        printf("ERROR: ID must be an integer between 1 and 999 \n");
-                        break;
-                    }
-                    pID += (id[index] - zero) * 100; /*keep running number of passenger ID*/
-                }
-                if (pID <= minID || pID > maxID)
-                {
-                    printf("ERROR: ID must be an integer between 1 and 999 \n");
-                    break;
-                }
                 index++;
             }
+
         }
         else /* invalid/blank passenger ID*/
         {
-            char ch;
-            scanf(" %c", &ch);
             printf("ERROR: ID must be an integer between 1 and 999 \n");
+            ClearInputBuffer();
         }
+        if (!isBreak) /*while loop exited*/
+        {
+            if (pID <= minID || pID > maxID) /*validate passenger ID greater equals to 1 and less than 99*/
+            {
+                printf("ERROR: ID must be an integer between 1 and 999 \n");
+                ClearInputBuffer();
+            }
+            break; /*valid passenger ID, break out of infinit loop*/
+        }
+
     }
-    return pID;
+    return pID; /*return valid passener ID*/
 }
 
 /*
@@ -586,9 +646,14 @@ void ReserveSeat(void)
     if (inputSeat == 0)
     {
         printf("Failed to reserve your seat \n");
-        return INVALID_SEAT;
     }
-    GetPassengerIdFromUser();
+    else
+    {
+        int pID = GetPassengerIdFromUser();
+        PrintSeatName(inputSeat);
+        printf("%d\n", pID); /*include passenger ID in print message Seat XX is now occupied by passenger*/
+        g_reservations[inputSeat] = pID; /*reserve passenger ID on specify seat index*/
+    } 
 }
 
 /*
@@ -756,32 +821,32 @@ int GetMenuChoice(void)
 ** TODO: Convert the if/else code into a switch.
 **       Do not change the behavior of the function.
 */
-//int main(void)
-//{
-//    int choice = 0;
-//    ClearReservations();
-//    do /*display the menu at least once*/
-//    {
-//        choice = GetMenuChoice();
-//        switch (choice)
-//        {
-//            case 1: 
-//                ReserveSeat();
-//                break;
-//            case 2: 
-//                CancelReservation();
-//                break;
-//            case 3: 
-//                MoveSeat();
-//                break;
-//            case 4:
-//                DisplaySeating();
-//                break;
-//            default:  /*when choice is == 0*/
-//                break;
-//        }
-//    } while (choice != 0); /*evaluate after the body of the loop has executed*/
-//
-//
-//    return 0;
-//}
+int main(void)
+{
+    int choice = 0;
+    ClearReservations();
+    do /*display the menu at least once*/
+    {
+        choice = GetMenuChoice();
+        switch (choice)
+        {
+            case 1: 
+                ReserveSeat();
+                break;
+            case 2: 
+                CancelReservation();
+                break;
+            case 3: 
+                MoveSeat();
+                break;
+            case 4:
+                DisplaySeating();
+                break;
+            default:  /*when choice is == 0*/
+                break;
+        }
+    } while (choice != 0); /*evaluate after the body of the loop has executed*/
+
+
+    return 0;
+}

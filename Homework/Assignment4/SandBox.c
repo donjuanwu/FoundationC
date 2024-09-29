@@ -165,7 +165,7 @@ const int INVALID_SEATS = -1;
 //		
 //}
 
-void ClearInputBuffer(void)
+void ClearInputBuffer1(void)
 {
 	int ch;
 	while ((ch = getchar()) != '\n' && (ch != EOF)); /*flush input buffer*/
@@ -288,8 +288,10 @@ int GetPassengerIdFromUser2(void)
 	unsigned int pID = 0;
 	unsigned int minID = 0;
 	unsigned int maxID = 999;
+	int isBreak; /*flag break out of while loop*/
 	for (;;)
 	{
+		isBreak = 0; /*initialize to false*/
 		printf("Enter passenger ID between 1 and 999: ");
 		itemsRead = scanf("%3s[^\n]", id);
 		if (itemsRead == 1)
@@ -305,6 +307,7 @@ int GetPassengerIdFromUser2(void)
 					{
 						printf("ERROR: ID must be an integer between 1 and 999 \n");
 						ClearInputBuffer();
+						isBreak = 1; 
 						break;
 					}
 					pID += (id[index] - zero); /*keep running number of passenger ID*/
@@ -316,6 +319,7 @@ int GetPassengerIdFromUser2(void)
 					{
 						printf("ERROR: ID must be an integer between 1 and 999 \n");
 						ClearInputBuffer();
+						isBreak = 1;
 						break;
 					}
 					pID *= 10; /*shift the current digit to the right by 10, prep to add the jext digit*/
@@ -328,6 +332,7 @@ int GetPassengerIdFromUser2(void)
 					{
 						printf("ERROR: ID must be an integer between 1 and 999 \n");
 						ClearInputBuffer();
+						isBreak = 1;
 						break;
 					}
 					pID *= 10; /*shift the current digit to the right by 10, prep to add the next digit*/
@@ -339,20 +344,107 @@ int GetPassengerIdFromUser2(void)
 		}
 		else /* invalid/blank passenger ID*/
 		{
-			/*char ch;
-			scanf(" %c", &ch);*/
 			printf("ERROR: ID must be an integer between 1 and 999 \n");
 			ClearInputBuffer();
 		}
+		if (!isBreak) /*while loop exited*/
+		{
+			if (pID <= minID || pID > maxID) /*validate passenger ID greater equals to 1 and less than 99*/
+			{
+				printf("ERROR: ID must be an integer between 1 and 999 \n");
+				ClearInputBuffer();
+			}
+			break; /*break out of infinit loop*/
+		}
+		
+	}
+	return pID;
+}
 
-		if (pID <= minID || pID > maxID)
+
+/*
+** Ask the user to enter a passenger ID.
+**   Use this exact prompt: Enter passenger ID between 1 and 999:
+** Each time an invalid ID is entered, print this exact error message:
+** ERROR: ID must be an integer between 1 and 999.
+**
+** Ask repeatedly until a valid answer is given.
+** Returns the valid passenger ID entered by the user.
+*/
+int GetPassengerIdFromUser4(void)
+{
+	char id[5];
+	unsigned int itemsRead;
+	unsigned int index;
+	unsigned int pID = 0;
+	unsigned int minID = 0;
+	unsigned int maxID = 999;
+	int isBreak; /*flag break out of while loop*/
+	for (;;)
+	{
+		isBreak = 0; /*initialize to false*/
+		printf("Enter passenger ID between 1 and 999: ");
+		itemsRead = scanf("%4s[^\n]", id);
+		if (itemsRead == 1)
+		{
+			pID = 0;
+			index = 0;
+			unsigned int zero = 48;
+			while (id[index] != '\0')
+			{
+				if (index == 0) /*1st entered character can't be less than equals to 0 or non-digit*/
+				{
+					if (id[index] <= zero || !isdigit(id[index]))
+					{
+						printf("ERROR: ID must be an integer between 1 and 999 \n");
+						ClearInputBuffer();
+						isBreak = 1;
+						break;
+					}
+					pID += (id[index] - zero); /*keep running number of passenger ID*/
+
+				}
+				else
+				{
+					if (index > 2) /*entered passenger ID greater than 3 characters*/
+					{
+						printf("ERROR: ID must be an integer between 1 and 999 \n");
+						ClearInputBuffer();
+						isBreak = 1;
+						break;
+					}
+					else if (!isdigit(id[index])) /*non-digit entered*/
+					{
+						printf("ERROR: ID must be an integer between 1 and 999 \n");
+						ClearInputBuffer();
+						isBreak = 1;
+						break;
+					}
+					pID *= 10; /*shift current entered number to the right by 10 */
+					pID += (id[index] - zero); /*keep running number of passenger ID*/
+				}
+				
+				index++;
+			}
+
+		}
+		else /* invalid/blank passenger ID*/
 		{
 			printf("ERROR: ID must be an integer between 1 and 999 \n");
 			ClearInputBuffer();
 		}
-		break; /*break out of infinit loop*/
+		if (!isBreak) /*while loop exited*/
+		{
+			if (pID <= minID || pID > maxID) /*validate passenger ID greater equals to 1 and less than 99*/
+			{
+				printf("ERROR: ID must be an integer between 1 and 999 \n");
+				ClearInputBuffer();
+			}
+			break; /*valid passenger ID, break out of infinit loop*/
+		}
+
 	}
-	return pID;
+	return pID; /*return valid passener ID*/
 }
 
 
@@ -391,16 +483,12 @@ int GetPassengerIdFromUser3(void)
 }
 
 
-
-
-
-
-
-
-int main(void)
-{
-	//int index = GetUserInput2();
-	int passID = GetPassengerIdFromUser2();
-	printf("Passenger ID: %d", passID);
-	return 0;
- }
+//int main(void)
+//{
+//	//int index = GetUserInput2();
+//	//int passID = GetPassengerIdFromUser2();
+//	//int passID = GetPassengerIdFromUser3(); /*input 1b3 => passenger ID = 1*/
+//	int passID = GetPassengerIdFromUser4(); /*allow guest to enter up to 4 characters will failed it*/
+//	printf("Passenger ID: %d", passID);
+//	return 0;
+// }
