@@ -153,6 +153,10 @@
 ** Date         Developer           Activities
 * 9/25/24       Don D               Started working on assignment 4
 *                                   - added #define _CRT_SECURE_NO_WARNINGS to suppress scanf() wanring
+* 9/28/24       Don D               Added void PrintRserverSeatExplation(void) 
+*                                      - explains system expect seat input
+*                                   Added int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
+*                                       - convert valid human-readable seat to 0 base index array
 * 
 */
 
@@ -231,6 +235,31 @@ void PrintReserveSeatExplanation(void)
     printf("You may reserve a seat by entering the seat row follow by the seat assigned letter like 12A. 12th row and colum A \n");
 }
 
+int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
+{
+    unsigned int rowLow = 1;
+    unsigned int rowHigh = 12;
+    unsigned int letterLow = 0;
+    unsigned int letterHigh = 3;
+
+    if (row < rowLow || row > rowHigh)
+    {
+        return INVALID_SEAT;
+    }
+    /*convert seat letter to offset index (A = 0, B = 1, C = 2, D = 3*/
+    unsigned int letterOffSet = toupper(seatLetter) - 'A';
+    if (letterOffSet < letterLow || letterOffSet > letterHigh)
+    {
+        return INVALID_SEAT;
+    }
+    {
+        unsigned int column = 4;
+        unsigned int index = (row - 1) * column + letterOffSet;
+        return index;
+    }
+
+}
+
 
 
 
@@ -270,11 +299,12 @@ void PrintSeatName(int seat)
 */
 int IsValidSeatIndex(int seat)
 {
-    /* TODO: Delete this line.  It supresses the warning about an unused argument.  */
-    seat;
+    if (seat < 0 || seat > NUM_SEATS - 1)
+    {
+        return 0;
+    }
 
-    /* TODO: Implement this function. */
-    return 0;
+    return 1;
 }
 
 /*
@@ -292,12 +322,76 @@ int IsValidSeatIndex(int seat)
 */
 int GetSeatInput(void)
 {
-    /*
-    char ch[4];
-    scanf("%s", ch);
-    */
+    char seat[4]; /*hold seat input 3 characters and null terminator */
+    unsigned int row = 0; /*seat row 1 - 12*/
+    char letter = '\0'; /*hold seat letter A - D*/
 
-    return INVALID_SEAT;
+    unsigned int itemsRead;
+    printf("Enter a seat to reserve: ");
+    itemsRead = scanf("%3[^\n]", seat); /*limit the input to just 3 characters to prevent buffer overflow*/
+    if (itemsRead != 1)
+    {
+        printf("Invalid - no input \n");
+        return INVALID_SEAT;
+    }
+    {
+        unsigned int index = 0;
+        char zero = '0';
+        while (seat[index] != '\0')
+        {
+            if (index == 0) /*1st character in seat input*/
+            {
+                if (toupper(seat[index]) <= zero || !isdigit(seat[index])) /*catch all 0, negative and non digits character*/
+                {
+                    printf("Invalid input - 1s character: %c\n", seat[index]);
+                    return INVALID_SEAT;
+                }
+                /* 1st input character is a digit 1 - 9 */
+                row = seat[index] - zero; /*convert number to range 0 - 9*/
+            }
+            else if (index == 1) /*2nd character in seat input*/
+            {
+                if (isalpha(seat[index])) /*2nd character is a letter*/
+                {
+                    letter = seat[index];
+
+                }
+                else if (isdigit(seat[index])) /*2nd character is a digit 0 - 9*/
+                {
+                    row *= 10; /*make row (1st digit) base 10 to add 2nd digit*/
+                    row += seat[index] - zero; /*convert row to range from 0 - 99*/
+                }
+                else /* is neither a character or a digit*/
+                {
+                    printf("Invalid input - 2nd character: %c\n", seat[index]);
+                    return INVALID_SEAT;
+                }
+            }
+            else /*3rd character*/
+            {
+                if (isdigit(seat[index])) /*validate 3rd character can't be 0 - 9*/
+                {
+                    printf("Invalid input - 3rd character: %c", seat[index]);
+                    return INVALID_SEAT;
+                }
+                else if (toupper(seat[index - 1]) >= 'A') /*validate 3rd chacter can't be another letter*/
+                {
+                    printf("Invalid input - 3rd character: %c", seat[index]);
+                    return INVALID_SEAT;
+                }
+                else
+                {
+                    letter = seat[index];
+                }
+            }
+            index++;
+        }
+    }
+
+    int seatIndex = convertSeatNumToSeatIndex(row, letter); /*convert user reserve seat to 0 base index*/
+    printf("Converted seat to 0 base index: %d", seatIndex);
+    return seatIndex;
+
 }
 
 /*
@@ -331,7 +425,7 @@ int GetSeatInput(void)
 */
 int GetSeatFromUser(const int isOccupied)
 {
-    int inputSeat = GetSeatInput();
+    int inputSeat = GetSeatInput(); /*get reserve seat in 0 base index*/
 
     if (IsValidSeatIndex(inputSeat))
     {
@@ -372,13 +466,13 @@ int GetOccupiedSeatFromUser(void)
 ** Wrapper function to improve readability of calling code.
 ** STUDENTS: Do not modify this function, unless you are doing the bonus points above.
 ** Notes:
-** isOccupied 0 = seat is available
-** isOccupied 1 = seat is not available
+** isOccupied = 0, seat is available
+** isOccupied = 1, seat is not available
 * 
 */
 int GetEmptySeatFromUser(void)
 {
-    return GetSeatFromUser(/* isOccupied */ 0);
+    return GetSeatFromUser(/* isOccupied */ 0); /* 0 = find available seat*/
 }
 
 /*
@@ -596,32 +690,32 @@ int GetMenuChoice(void)
 ** TODO: Convert the if/else code into a switch.
 **       Do not change the behavior of the function.
 */
-//int main1(void)
-//{
-//    int choice = 0;
-//    ClearReservations();
-//    do /*display the menu at least once*/
-//    {
-//        choice = GetMenuChoice();
-//        switch (choice)
-//        {
-//            case 1: 
-//                ReserveSeat();
-//                break;
-//            case 2: 
-//                CancelReservation();
-//                break;
-//            case 3: 
-//                MoveSeat();
-//                break;
-//            case 4:
-//                DisplaySeating();
-//                break;
-//            default:  /*when choice is == 0*/
-//                break;
-//        }
-//    } while (choice != 0); /*evaluate after the body of the loop has executed*/
-//
-//
-//    return 0;
-//}
+int main(void)
+{
+    int choice = 0;
+    ClearReservations();
+    do /*display the menu at least once*/
+    {
+        choice = GetMenuChoice();
+        switch (choice)
+        {
+            case 1: 
+                ReserveSeat();
+                break;
+            case 2: 
+                CancelReservation();
+                break;
+            case 3: 
+                MoveSeat();
+                break;
+            case 4:
+                DisplaySeating();
+                break;
+            default:  /*when choice is == 0*/
+                break;
+        }
+    } while (choice != 0); /*evaluate after the body of the loop has executed*/
+
+
+    return 0;
+}
