@@ -643,9 +643,9 @@ void ReserveSeat(void)
     PrintReserveSeatExplanation(); /* Explanation of seating arrangement*/
     printf("Enter a seat to reserve: ");
     int inputSeat = GetEmptySeatFromUser(); /* wrapper function*/
-    if (inputSeat == 0)
+    if (inputSeat < 0)
     {
-        printf("Failed to reserve your seat \n");
+        printf("Failed to reserve your seat. \n");
     }
     else
     {
@@ -763,7 +763,7 @@ void DisplaySeating(void)
             int id = g_reservations[seat];
 
             if (id == 0) printf("     |");
-            else printf(" %d |", id);
+            else printf(" %3d |", id); /*padded 3 spaces*/
         }
         printf("\n");
     }
