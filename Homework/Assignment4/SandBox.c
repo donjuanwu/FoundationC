@@ -15,106 +15,6 @@ Notes:
 
 const int INVALID_SEATS = -1;
 
-int convertSeatNumToSeatIndex2(unsigned int row, char seatLetter)
-{
-	unsigned int rowLow = 1;
-	unsigned int rowHigh = 12;
-	unsigned int letterLow = 0;
-	unsigned int letterHigh = 3;
-	
-	if (row < rowLow || row > rowHigh)
-	{
-		return INVALID_SEATS;
-	}
-	/*convert seat letter to offset index (A = 0, B = 1, C = 2, D = 3*/
-	unsigned int letterOffSet = toupper(seatLetter) - 'A';
-	if (letterOffSet < letterLow || letterOffSet > letterHigh)
-	{
-		return INVALID_SEATS;
-	}
-	{
-		unsigned int column = 4;
-		unsigned int index = (row - 1) * column + letterOffSet;
-		return index;
-	}
-
-}
-
-int GetUserInput2(void)
-{
-	char seat[4]; /*hold seat input 3 characters and null terminator */
-	unsigned int row = 0; /*seat row 1 - 12*/
-	char letter = '\0'; /*hold seat letter A - D*/
-
-	unsigned int itemsRead;
-	printf("Enter a seat to reserve: ");
-	itemsRead = scanf("%3[^\n]", seat); /*limit the input to just 3 characters to prevent buffer overflow*/
-	if (itemsRead != 1)
-	{
-		printf("Invalid - no input \n");
-		/*char ch;
-		if (scanf(" %c", &ch) != 1);*/
-		return INVALID_SEATS;
-	}
-	{
-		unsigned int index = 0;
-		char zero = '0';
-		while (seat[index] != '\0')
-		{
-			if (index == 0) /*1st character in seat input*/
-			{
-				if (toupper(seat[index]) <= zero || !isdigit(seat[index])) /*catch all 0, negative and non digits character*/
-				{
-					printf("Invalid input - 1s character: %c\n", seat[index]);
-					return INVALID_SEATS;
-				}
-				/* 1st input character is a digit 1 - 9 */
-				row = seat[index] - zero; /*convert number to range 0 - 9*/
-			}
-			else if (index == 1) /*2nd character in seat input*/
-			{
-				if (isalpha(seat[index])) /*2nd character is a letter*/
-				{
-					letter = seat[index]; 
-					
-				}
-				else if (isdigit(seat[index])) /*2nd character is a digit 0 - 9*/
-				{
-					row *= 10; /*make row (1st digit) base 10 to add 2nd digit*/
-					row += seat[index] - zero; /*convert row to range from 0 - 99*/
-				}
-				else /* is neither a character or a digit*/
-				{
-					printf("Invalid input - 2nd character: %c\n", seat[index]);
-					return INVALID_SEATS;
-				}
-			}
-			else /*3rd character*/
-			{
-				if (isdigit(seat[index])) /*validate 3rd character can't be 0 - 9*/
-				{
-					printf("Invalid input - 3rd character: %c", seat[index]);
-					return INVALID_SEATS;
-				}
-				else if (toupper(seat[index - 1]) >= 'A') /*validate 3rd chacter can't be another letter*/
-				{
-					printf("Invalid input - 3rd character: %c", seat[index]);
-					return INVALID_SEATS;
-				}
-				else
-				{
-					letter = seat[index];
-				}
-			}
-			index++;
-		}
-	}
-
- 	int seatIndex = convertSeatNumToSeatIndex2(row, letter);
- 	printf("Converted seat to 0 base index: %d", seatIndex);
-	return 0;
-}
-
 //int GetUserSeatInput(void)
 //{
 //	/*
@@ -265,9 +165,242 @@ int GetUserInput2(void)
 //		
 //}
 
+void ClearInputBuffer(void)
+{
+	int ch;
+	while ((ch = getchar()) != '\n' && (ch != EOF)); /*flush input buffer*/
+}
 
-//int main(void)
-//{
-//	int index = GetUserInput2();
-//	return 0;
-// }
+int convertSeatNumToSeatIndex2(unsigned int row, char seatLetter)
+{
+	unsigned int rowLow = 1;
+	unsigned int rowHigh = 12;
+	unsigned int letterLow = 0;
+	unsigned int letterHigh = 3;
+	
+	if (row < rowLow || row > rowHigh)
+	{
+		return INVALID_SEATS;
+	}
+	/*convert seat letter to offset index (A = 0, B = 1, C = 2, D = 3*/
+	unsigned int letterOffSet = toupper(seatLetter) - 'A';
+	if (letterOffSet < letterLow || letterOffSet > letterHigh)
+	{
+		return INVALID_SEATS;
+	}
+	{
+		unsigned int column = 4;
+		unsigned int index = (row - 1) * column + letterOffSet;
+		return index;
+	}
+
+}
+
+int GetUserInput2(void)
+{
+	char seat[4]; /*hold seat input 3 characters and null terminator */
+	unsigned int row = 0; /*seat row 1 - 12*/
+	char letter = '\0'; /*hold seat letter A - D*/
+
+	unsigned int itemsRead;
+	printf("Enter a seat to reserve: ");
+	itemsRead = scanf("%3[^\n]", seat); /*limit the input to just 3 characters to prevent buffer overflow*/
+	if (itemsRead != 1)
+	{
+		printf("Invalid - no input \n");
+		/*char ch;
+		if (scanf(" %c", &ch) != 1);*/
+		return INVALID_SEATS;
+	}
+	{
+		unsigned int index = 0;
+		char zero = '0';
+		while (seat[index] != '\0')
+		{
+			if (index == 0) /*1st character in seat input*/
+			{
+				if (toupper(seat[index]) <= zero || !isdigit(seat[index])) /*catch all 0, negative and non digits character*/
+				{
+					printf("Invalid input - 1s character: %c\n", seat[index]);
+					return INVALID_SEATS;
+				}
+				/* 1st input character is a digit 1 - 9 */
+				row = seat[index] - zero; /*convert number to range 0 - 9*/
+			}
+			else if (index == 1) /*2nd character in seat input*/
+			{
+				if (isalpha(seat[index])) /*2nd character is a letter*/
+				{
+					letter = seat[index]; 
+					
+				}
+				else if (isdigit(seat[index])) /*2nd character is a digit 0 - 9*/
+				{
+					row *= 10; /*make row (1st digit) base 10 to add 2nd digit*/
+					row += seat[index] - zero; /*convert row to range from 0 - 99*/
+				}
+				else /* is neither a character or a digit*/
+				{
+					printf("Invalid input - 2nd character: %c\n", seat[index]);
+					return INVALID_SEATS;
+				}
+			}
+			else /*3rd character*/
+			{
+				if (isdigit(seat[index])) /*validate 3rd character can't be 0 - 9*/
+				{
+					printf("Invalid input - 3rd character: %c", seat[index]);
+					return INVALID_SEATS;
+				}
+				else if (toupper(seat[index - 1]) >= 'A') /*validate 3rd chacter can't be another letter*/
+				{
+					printf("Invalid input - 3rd character: %c", seat[index]);
+					return INVALID_SEATS;
+				}
+				else
+				{
+					letter = seat[index];
+				}
+			}
+			index++;
+		}
+	}
+
+ 	int seatIndex = convertSeatNumToSeatIndex2(row, letter);
+ 	printf("Converted seat to 0 base index: %d", seatIndex);
+	return 0;
+}
+
+/*
+** Ask the user to enter a passenger ID.
+**   Use this exact prompt: Enter passenger ID between 1 and 999:
+** Each time an invalid ID is entered, print this exact error message:
+** ERROR: ID must be an integer between 1 and 999.
+**
+** Ask repeatedly until a valid answer is given.
+** Returns the valid passenger ID entered by the user.
+*/
+int GetPassengerIdFromUser2(void)
+{
+	char id[4];
+	unsigned int itemsRead;
+	unsigned int index;
+	unsigned int pID = 0;
+	unsigned int minID = 0;
+	unsigned int maxID = 999;
+	for (;;)
+	{
+		printf("Enter passenger ID between 1 and 999: ");
+		itemsRead = scanf("%3s[^\n]", id);
+		if (itemsRead == 1)
+		{
+			pID = 0;
+			index = 0;
+			unsigned int zero = 48;
+			while (id[index] != '\0')
+			{
+				if (index == 0) /*1st entered character can't be less than equals to 0 or non-digit*/
+				{
+					if (id[index] <= zero || !isdigit(id[index]))
+					{
+						printf("ERROR: ID must be an integer between 1 and 999 \n");
+						ClearInputBuffer();
+						break;
+					}
+					pID += (id[index] - zero); /*keep running number of passenger ID*/
+
+				}
+				else if (index == 1) /*2nd character*/
+				{
+					if (!isdigit(id[index])) /*not a digit character*/
+					{
+						printf("ERROR: ID must be an integer between 1 and 999 \n");
+						ClearInputBuffer();
+						break;
+					}
+					pID *= 10; /*shift the current digit to the right by 10, prep to add the jext digit*/
+					pID += (id[index] - zero); /*keep running number of passenger ID*/
+
+				}
+				else /*3rd character*/
+				{
+					if (!isdigit(id[index])) /*not a digit character*/
+					{
+						printf("ERROR: ID must be an integer between 1 and 999 \n");
+						ClearInputBuffer();
+						break;
+					}
+					pID *= 10; /*shift the current digit to the right by 10, prep to add the next digit*/
+					pID += (id[index] - zero); /*keep running number of passenger ID*/
+				}
+				index++;
+			}
+			
+		}
+		else /* invalid/blank passenger ID*/
+		{
+			/*char ch;
+			scanf(" %c", &ch);*/
+			printf("ERROR: ID must be an integer between 1 and 999 \n");
+			ClearInputBuffer();
+		}
+
+		if (pID <= minID || pID > maxID)
+		{
+			printf("ERROR: ID must be an integer between 1 and 999 \n");
+			ClearInputBuffer();
+		}
+		break; /*break out of infinit loop*/
+	}
+	return pID;
+}
+
+
+int GetPassengerIdFromUser3(void)
+{
+	unsigned int itemsRead;
+	unsigned int pID; 
+	unsigned int idLow = 1;
+	unsigned int idHigh = 999;
+	unsigned int minID = 0;
+	unsigned int maxID = 999;
+	for (;;)
+	{
+		printf("Enter passenger ID between %d and %d: ", idLow, idHigh);
+		itemsRead = scanf("%d", &pID);
+		if (itemsRead == 1 && pID > minID && pID <= maxID)
+		{
+			return pID;
+		}
+		else /* invalid or blank input */
+		{
+			if (itemsRead == 0)
+			{
+				printf("ERROR: ID must be an integer between 1 and 999 \n");
+				ClearInputBuffer();
+			}
+			else
+			{
+				printf("ERROR: ID must be an integer between 1 and 999 \n");
+				ClearInputBuffer();
+			}
+			
+		}
+	}
+	return pID;
+}
+
+
+
+
+
+
+
+
+int main(void)
+{
+	//int index = GetUserInput2();
+	int passID = GetPassengerIdFromUser2();
+	printf("Passenger ID: %d", passID);
+	return 0;
+ }

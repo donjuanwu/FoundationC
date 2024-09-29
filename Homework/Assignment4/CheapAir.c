@@ -486,8 +486,68 @@ int GetEmptySeatFromUser(void)
 */
 int GetPassengerIdFromUser(void)
 {
-    /* TODO: Implement this function. */
-    return 0;
+    char id[4];
+    unsigned int itemsRead;
+    unsigned int index;
+    unsigned int pID = 0; 
+    unsigned int minID = 0;
+    unsigned int maxID = 999;
+    for (;;)
+    {
+        printf("Enter passenger ID between 1 and 999: ");
+        itemsRead = scanf("%3s", id);
+        if (itemsRead == 1)
+        {
+            pID = 0;
+            index = 0;
+            unsigned int zero = 48;
+            while (id[index] != '\0')
+            {
+                if (index == 0) /*1st entered character can't be less than equals to 0 or non-digit*/
+                {
+                    if (id[index] <= zero || !isdigit(id[index]))
+                    {
+                        printf("ERROR: ID must be an integer between 1 and 999 \n");
+                        break;
+                    }
+                    pID += (id[index] - zero); /*keep running number of passenger ID*/
+
+                }
+                else if (index == 1) /*2nd character*/
+                {
+                    if (!isdigit(id[index])) /*not a digit character*/
+                    {
+                        printf("ERROR: ID must be an integer between 1 and 999 \n");
+                        break;
+                    }
+                    pID += (id[index] - zero) * 10; /*keep running number of passenger ID*/
+
+                }
+                else /*3rd character*/
+                {
+                    if (!isdigit(id[index])) /*not a digit character*/
+                    {
+                        printf("ERROR: ID must be an integer between 1 and 999 \n");
+                        break;
+                    }
+                    pID += (id[index] - zero) * 100; /*keep running number of passenger ID*/
+                }
+                if (pID <= minID || pID > maxID)
+                {
+                    printf("ERROR: ID must be an integer between 1 and 999 \n");
+                    break;
+                }
+                index++;
+            }
+        }
+        else /* invalid/blank passenger ID*/
+        {
+            char ch;
+            scanf(" %c", &ch);
+            printf("ERROR: ID must be an integer between 1 and 999 \n");
+        }
+    }
+    return pID;
 }
 
 /*
@@ -522,7 +582,13 @@ void ReserveSeat(void)
     
     PrintReserveSeatExplanation(); /* Explanation of seating arrangement*/
     printf("Enter a seat to reserve: ");
-    GetEmptySeatFromUser(); /* wrapper function*/
+    int inputSeat = GetEmptySeatFromUser(); /* wrapper function*/
+    if (inputSeat == 0)
+    {
+        printf("Failed to reserve your seat \n");
+        return INVALID_SEAT;
+    }
+    GetPassengerIdFromUser();
 }
 
 /*
@@ -690,32 +756,32 @@ int GetMenuChoice(void)
 ** TODO: Convert the if/else code into a switch.
 **       Do not change the behavior of the function.
 */
-int main(void)
-{
-    int choice = 0;
-    ClearReservations();
-    do /*display the menu at least once*/
-    {
-        choice = GetMenuChoice();
-        switch (choice)
-        {
-            case 1: 
-                ReserveSeat();
-                break;
-            case 2: 
-                CancelReservation();
-                break;
-            case 3: 
-                MoveSeat();
-                break;
-            case 4:
-                DisplaySeating();
-                break;
-            default:  /*when choice is == 0*/
-                break;
-        }
-    } while (choice != 0); /*evaluate after the body of the loop has executed*/
-
-
-    return 0;
-}
+//int main(void)
+//{
+//    int choice = 0;
+//    ClearReservations();
+//    do /*display the menu at least once*/
+//    {
+//        choice = GetMenuChoice();
+//        switch (choice)
+//        {
+//            case 1: 
+//                ReserveSeat();
+//                break;
+//            case 2: 
+//                CancelReservation();
+//                break;
+//            case 3: 
+//                MoveSeat();
+//                break;
+//            case 4:
+//                DisplaySeating();
+//                break;
+//            default:  /*when choice is == 0*/
+//                break;
+//        }
+//    } while (choice != 0); /*evaluate after the body of the loop has executed*/
+//
+//
+//    return 0;
+//}
