@@ -361,7 +361,7 @@ void PrintSeatName(int seat)
             break;
         }
         /* TODO: Implement this function. */
-        printf("Seat %d%c is now occupied by passenger ", row, letter);
+        printf("%d%c", row, letter);
     }
 
 
@@ -397,7 +397,7 @@ int IsValidSeatIndex(int seat)
 */
 int GetSeatInput(void)
 {
-    char seat[4]; /*hold seat input 3 characters and null terminator */
+    char seat[4]; /*hold 3 characters and null terminator */
     unsigned int row = 0; /*seat row 1 - 12*/
     char letter = '\0'; /*hold seat letter A - D*/
 
@@ -488,9 +488,7 @@ int GetSeatInput(void)
 **           deal with the seat index as a plain integer.
 **
 ** TODO:
-**   - Simplify and flatten out this function by using early return
 **   - Consolidate redundant code.
-**   - Apply const where possible.
 **
 ** OPTIONAL: For bonus points...
 **   - Move the seat occupied validation logic into the two wrapper functions that call this one.
@@ -499,7 +497,7 @@ int GetSeatInput(void)
 */
 int GetSeatFromUser(const int isOccupied)
 {
-    int inputSeat = GetSeatInput(); /*get reserve seat in 0 base index*/
+    const int inputSeat = GetSeatInput(); /*get reserve seat in 0 base index*/
 
     if (IsValidSeatIndex(inputSeat))
     {
@@ -508,15 +506,16 @@ int GetSeatFromUser(const int isOccupied)
             printf("ERROR: Sorry, seat ");
             PrintSeatName(inputSeat);
             printf(" was expected to be occupied but is empty.\n");
-            inputSeat = INVALID_SEAT;
+            return INVALID_SEAT;
         }
         else if (isOccupied == 0 && g_reservations[inputSeat] != 0)
         {
             printf("ERROR: Sorry, seat ");
             PrintSeatName(inputSeat);
             printf(" was expected to be empty but is occupied by passenger %d.\n", g_reservations[inputSeat]);
-            inputSeat = INVALID_SEAT;
+            return INVALID_SEAT;
         }
+        return inputSeat; /*return seatIndex*/
     }
     else
     {
@@ -524,15 +523,15 @@ int GetSeatFromUser(const int isOccupied)
         return INVALID_SEAT;
     }
 
-    return inputSeat;
+   // return inputSeat;
 }
-
+ 
 /*
 ** Wrapper function to improve readability of calling code.
 ** STUDENTS: Do not modify this function, unless you are doing the bonus points above.
 */
 int GetOccupiedSeatFromUser(void)
-{
+ {
     return GetSeatFromUser(/* isOccupied */ 1);
 }
 
@@ -615,7 +614,7 @@ int GetPassengerIdFromUser(void)
             }
 
         }
-        else /* invalid/blank passenger ID*/
+        else /* invalid passenger ID*/
         {
             printf("ERROR: ID must be an integer between 1 and 999 \n");
             ClearInputBuffer();
@@ -674,8 +673,9 @@ void ReserveSeat(void)
     else
     {
         int pID = GetPassengerIdFromUser();
+        printf("Seat ");
         PrintSeatName(inputSeat);
-        printf("%d\n", pID); /*include passenger ID in print message Seat XX is now occupied by passenger*/
+        printf(" is now occupied by passenger %d\n", pID); /*include 'occupied by passenger xxx' in message Seat XX is now occupied by passenger*/
         g_reservations[inputSeat] = pID; /*reserve passenger ID on specify seat index*/
     } 
 }
@@ -692,9 +692,32 @@ void ReserveSeat(void)
 */
 void CancelReservation(void)
 {
-    // TODO: Implement this function.
-    
+    printf("Enter a seat to cancel: ");
+    int inputSeat = GetOccupiedSeatFromUser();
+    if (inputSeat < 0 || inputSeat > 47) /*seat is emptied*/
+    {
+        printf("Failed to cancel reservation \n");
+    }
+    else
+    {
+        
+        int pID = g_reservations[inputSeat]; /*get passenger ID of occupied seat*/
+        if (pID < 1 || pID > 999) /*invalid passenger ID*/
+        {
+            printf("Failed to cancel reservation \n");
+        }
+        else /*valid passenger ID*/
+        {
+            g_reservations[inputSeat] = 0; /*reset seat index back to available*/
+            printf("Seat ");
+            PrintSeatName(inputSeat);
+            printf(" is now empty and no longer occupied by passenger %d\n", pID);
 
+        }
+    }
+        
+    
+    
 }
 
 /*
@@ -842,8 +865,7 @@ int GetMenuChoice(void)
 
 
 /*
-** TODO: Convert the if/else code into a switch.
-**       Do not change the behavior of the function.
+** 
 */
 int main(void)
 {
