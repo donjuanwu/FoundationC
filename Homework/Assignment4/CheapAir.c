@@ -498,32 +498,29 @@ int GetSeatInput(void)
 int GetSeatFromUser(const int isOccupied)
 {
     const int inputSeat = GetSeatInput(); /*get reserve seat in 0 base index*/
-
-    if (IsValidSeatIndex(inputSeat))
-    {
-        if (isOccupied != 0 && g_reservations[inputSeat] == 0)
-        {
-            printf("ERROR: Sorry, seat ");
-            PrintSeatName(inputSeat);
-            printf(" was expected to be occupied but is empty.\n");
-            return INVALID_SEAT;
-        }
-        else if (isOccupied == 0 && g_reservations[inputSeat] != 0)
-        {
-            printf("ERROR: Sorry, seat ");
-            PrintSeatName(inputSeat);
-            printf(" was expected to be empty but is occupied by passenger %d.\n", g_reservations[inputSeat]);
-            return INVALID_SEAT;
-        }
-        return inputSeat; /*return seatIndex*/
-    }
-    else
+    if (!IsValidSeatIndex(inputSeat))
     {
         printf("ERROR: Sorry, that seat is not valid.\n");
         return INVALID_SEAT;
     }
 
-   // return inputSeat;
+    if (isOccupied != 0 && g_reservations[inputSeat] == 0)
+    {
+        printf("ERROR: Sorry, seat ");
+        PrintSeatName(inputSeat);
+        printf(" was expected to be occupied but is empty.\n");
+        return INVALID_SEAT;
+    }
+
+    if (isOccupied == 0 && g_reservations[inputSeat] != 0)
+    {
+        printf("ERROR: Sorry, seat ");
+        PrintSeatName(inputSeat);
+        printf(" was expected to be empty but is occupied by passenger %d.\n", g_reservations[inputSeat]);
+        return INVALID_SEAT;
+    }
+    return inputSeat; /*return seatIndex*/
+
 }
  
 /*
@@ -721,7 +718,6 @@ void CancelReservation(void)
 }
 
 /*
-** TODO: Flatten out this function using early-return.
 **       Do not change the behavior of the function.
 */
 void MoveSeat(void)
@@ -730,24 +726,30 @@ void MoveSeat(void)
     printf("FROM which seat to move: ");
     fromSeat = GetOccupiedSeatFromUser();
 
-    if (IsValidSeatIndex(fromSeat))
+    if (!IsValidSeatIndex(fromSeat))
     {
-        int toSeat;
-        printf("TO which seat to move: ");
-        toSeat = GetEmptySeatFromUser();
-
-        if (IsValidSeatIndex(toSeat))
-        {
-            g_reservations[toSeat] = g_reservations[fromSeat];
-            g_reservations[fromSeat] = 0;
-
-            printf("Moved passenger %d from seat ", g_reservations[toSeat]);
-            PrintSeatName(fromSeat);
-            printf(" to seat ");
-            PrintSeatName(toSeat);
-            printf(".\n");
-        }
+        printf("Invalid seat: %d", fromSeat);
+        return;
     }
+
+    int toSeat;
+    printf("TO which seat to move: ");
+    toSeat = GetEmptySeatFromUser();
+    if (!IsValidSeatIndex(toSeat))
+    {
+        printf("Invalid seat: %d", toSeat);
+        return;
+    }
+
+    g_reservations[toSeat] = g_reservations[fromSeat];
+    g_reservations[fromSeat] = 0;
+
+    printf("Moved passenger %d from seat ", g_reservations[toSeat]);
+    PrintSeatName(fromSeat);
+    printf(" to seat ");
+    PrintSeatName(toSeat);
+    printf(".\n");
+
 }
 
 /*
