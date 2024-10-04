@@ -302,9 +302,9 @@ void PrintSeatName(int seat)
     }
     else
     {
-        const unsigned int column = 4;
-        const unsigned int intLetter = seat % column;
-        unsigned int row = ((seat - intLetter) / column) + 1;
+        const unsigned int column = 4; /*number column correspond to seat letter (A - D)*/
+        const unsigned int intLetter = seat % column; /*calculate int letter offset*/
+        unsigned int row = ((seat - intLetter) / column) + 1; /*calculate row*/
         char letter;
         switch (intLetter)
         {
@@ -362,26 +362,14 @@ int GetSeatInput(void)
     unsigned int seatNum;
     char seatLetter; 
     unsigned int itemsRead = scanf("%d%c", &seatNum, &seatLetter); /*capture digits and character*/
-    if (itemsRead < 2)
+    if (itemsRead < 2 || itemsRead > 3)
     {
         printf("Invalid input \n");
-        ClearInputBuffer();
+        ClearInputBuffer(); /*clear the buffer of remaining characters still in buffer*/
         return INVALID_SEAT; 
     }
-
-    if (seatNum < 1 || seatNum > 12) /*validate seat number meet range requirement*/
-    {
-        printf("Invalid seat number: %d\n", seatNum);
-        return INVALID_SEAT;
-    }
-    
-    if (toupper(seatLetter) < 'A' || toupper(seatLetter) > 'D') /*validate seat letter is within character range*/
-    {
-        printf("Invalid seat letter: %d\n", toupper(seatLetter));
-        return INVALID_SEAT;
-    }
-    { /*limit scope of below variables*/
-        printf("Valid seat: %d%c\n", seatNum, toupper(seatLetter));
+    { /*limit scope of below variables, convert human-readable seat to 0 base index*/
+        printf("Entered human-readable seat: %d%c\n", seatNum, toupper(seatLetter));
         const unsigned int column = 4; /*4 seat letters from column A - D*/
         const unsigned int seatLetterOffset = toupper(seatLetter) - 'A'; /*A = 0, B = 1, C = 2, D = 3*/
         const unsigned int seatIndex = (seatNum - 1) * 4 + seatLetterOffset; /*formula to convert human-readable seat to 0 base index*/
@@ -389,8 +377,6 @@ int GetSeatInput(void)
         return seatIndex;
     }
     
-
-
 }
 
 /*
@@ -417,8 +403,10 @@ int GetSeatInput(void)
 **   - Move the seat occupied validation logic into the two wrapper functions that call this one.
 **   - This function consolidates the error message: ERROR: Sorry, that seat is not valid.
 **     whenever GetSeatInput returns INVALID_SEAT.
+** Date     Developer       Activities
+** 10/2/24  Don D           Implemented the bonus
 */
-int GetSeatFromUser(const int isOccupied)
+int GetSeatFromUser(void)
 {
     const int inputSeat = GetSeatInput(); /*get reserve seat in 0 base index*/
     if (!IsValidSeatIndex(inputSeat))
@@ -427,45 +415,56 @@ int GetSeatFromUser(const int isOccupied)
         return INVALID_SEAT;
     }
 
-    if (isOccupied != 0 && g_reservations[inputSeat] == 0)
-    {
-        printf("ERROR: Sorry, seat ");
-        PrintSeatName(inputSeat);
-        printf(" was expected to be occupied but is empty.\n");
-        return INVALID_SEAT;
-    }
-
-    if (isOccupied == 0 && g_reservations[inputSeat] != 0)
-    {
-        printf("ERROR: Sorry, seat ");
-        PrintSeatName(inputSeat);
-        printf(" was expected to be empty but is occupied by passenger %d.\n", g_reservations[inputSeat]);
-        return INVALID_SEAT;
-    }
-    return inputSeat; /*return seatIndex*/
+    return inputSeat; /*return valid seat index*/
 
 }
  
 /*
 ** Wrapper function to improve readability of calling code.
 ** STUDENTS: Do not modify this function, unless you are doing the bonus points above.
+** Date     Developer       Activities
+** 10/2/24  Don D           Implemented the bonus
 */
 int GetOccupiedSeatFromUser(void)
  {
-    return GetSeatFromUser(1); /* 1 = find occupied seat*/
+    const int seatIndex = GetSeatFromUser(); /*get seat reservation non human-readable*/
+    if (seatIndex == -1) /*invalid seat == -1*/
+    {
+        return INVALID_SEAT;
+    }
+    if (g_reservations[seatIndex] == 0) /*seat is empty (not occupied)*/
+    {
+        printf("ERROR: Sorry, seat ");
+        PrintSeatName(seatIndex);
+        printf(" was expected to be occupied but is empty.\n");
+        return INVALID_SEAT;
+    }
+    return seatIndex; /*return seat in 0 base index*/
+    
 }
 
 /*
 ** Wrapper function to improve readability of calling code.
 ** STUDENTS: Do not modify this function, unless you are doing the bonus points above.
-** Notes:
-** isOccupied = 0, seat is available
-** isOccupied = 1, seat is not available
+** Date     Developer       Activities
+** 10/2/24  Don D           Implemented the bonus
 * 
 */
 int GetEmptySeatFromUser(void)
 {
-    return GetSeatFromUser(0); /* 0 = find available seat*/
+    const int seatIndex = GetSeatFromUser(); /*get seat reservation non human-readable*/
+    if (seatIndex == -1) /*invalid seat == -1*/
+    {
+        return INVALID_SEAT;
+    }
+    if (g_reservations[seatIndex] != 0) /*seat is occupied*/
+    {
+        printf("ERROR: Sorry, seat ");
+        PrintSeatName(seatIndex);
+        printf(" was expected to be empty but is occupied by passenger %d.\n", g_reservations[seatIndex]);
+        return INVALID_SEAT;
+    }
+    return seatIndex; /*return seat in 0 base index*/
 }
 
 /*
@@ -476,6 +475,8 @@ int GetEmptySeatFromUser(void)
 **
 ** Ask repeatedly until a valid answer is given.
 ** Returns the valid passenger ID entered by the user.
+** Date     Developer       Activities
+** 10/2/24  Don D           Implemented a limit of 3 attempts
 */
 int GetPassengerIdFromUser(void)
 {
@@ -490,7 +491,7 @@ int GetPassengerIdFromUser(void)
         itemsRead = scanf("%d", &pID);
         if (itemsRead > 0 && pID > 0 && pID < 1000) /*valid input and passenger ID meet range requirement*/
         {
-            ClearInputBuffer(); /*Clear the input buffer just in case the user enter 10a*/
+            ClearInputBuffer(); /*Clear the input buffer in case user enter extra characteres like 10a*/
             return pID; /*return passenger ID*/
         }     
         if (++nTry == maxTry)
@@ -786,10 +787,10 @@ int main(void)
             case 4:
                 DisplaySeating();
                 break;
-            default:  /*when choice is == 0*/
+            default:  /*fall-through when choice is neither 1 - 4*/
                 break;
         }
-    } while (choice != 0); /*evaluate after the body of the loop has executed*/
+    } while (choice !=0); /*evaluate after switch block*/
 
 
     return 0;
