@@ -1,0 +1,8 @@
+1. Test these specific seat names: 0E, 1E, 1F, 2?, 2@
+
+
+
+
+
+** - Test these specific passenger IDs: -1, 0, 1, 999, 1000
+** - Test these specific menu choices: -1, 0, 1, 2, 3, 4, 5

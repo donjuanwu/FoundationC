@@ -262,8 +262,6 @@ void ClearReservations(void)
     {
         g_reservations[index] = 0;
     }
-
-
 }
 
 
@@ -288,43 +286,28 @@ void ClearReservations(void)
 **           and arithmetic can be done on both.
 ** Notes:
 *  1. Calculate 0 base index
-*   index = (row -1) * 4 + offset
+*   index = (row -1) * NUM_LETTERS + offset
 *  2. Calculate letter value in number format
-*   intLetter = seatIndex % 4
+*   intLetter = seatIndex % NUM_LETTERS
 *  3. Calculate seat row in human-readable format
-*    row = ( (index - offset) / 4 ) + 1
+*    row = ( (index - offset) / NUM_LETTERS) + 1
 */
 void PrintSeatName(int seat)
 {
-    if (seat < 0)
+
+    if (seat < 0 || seat > NUM_SEATS - 1)
     {
         printf("Invalid seat index: %d\n", seat);
     }
+
     else
     {
-        const unsigned int column = 4; /*number column correspond to seat letter (A - D)*/
-        const unsigned int intLetter = seat % column; /*calculate int letter offset*/
-        unsigned int row = ((seat - intLetter) / column) + 1; /*calculate row*/
-        char letter;
-        switch (intLetter)
-        {
-        case 0: 
-            letter = 'A';
-            break;
-        case 1:
-            letter = 'B';
-            break;
-        case 2:
-            letter = 'C';
-            break;
-        default:
-            letter = 'D';
-            break;
-        }
-        printf("%d%c", row, letter);
+        /* NUM_LETTERS = number column correspond to seat letter(A - D) */
+        const unsigned int intLetter = seat % NUM_LETTERS; /*calculate int letter offset*/
+        unsigned int row = ((seat - intLetter) / NUM_LETTERS) + 1; /*calculate row by subtract from offset*/
+        char letter = intLetter + 'A';  /*get character representation base on corresponding ASCII value and add it to char 'A' value*/
+        printf("%d%c", row, toupper(letter));
     }
-
-
 }
 
 /*
@@ -359,21 +342,31 @@ int IsValidSeatIndex(int seat)
 */
 int GetSeatInput(void)
 {
-    unsigned int seatNum;
+    int seatNum;
     char seatLetter; 
-    unsigned int itemsRead = scanf("%d%c", &seatNum, &seatLetter); /*capture digits and character*/
+    unsigned int minRow = 1; /*minimum row*/
+    char minLetter = 'A'; /*beginning seat letter character*/
+    unsigned int itemsRead = scanf("%d%c", &seatNum, &seatLetter); /*capture digits and characters*/
     if (itemsRead < 2 || itemsRead > 3)
     {
-        printf("Invalid input \n");
-        ClearInputBuffer(); /*clear the buffer of remaining characters still in buffer*/
+        /*clear the buffer of remaining characters still in buffer*/
+        ClearInputBuffer(); 
         return INVALID_SEAT; 
     }
+    if (seatNum < minRow || seatNum > NUM_ROWS)
+    {
+        return INVALID_SEAT;
+    }
+    if (toupper(seatLetter) < minLetter || toupper(seatLetter) > (minLetter + NUM_LETTERS - 1))
+    {
+        return INVALID_SEAT;
+    }
+
+
     { /*limit scope of below variables, convert human-readable seat to 0 base index*/
-        printf("Entered human-readable seat: %d%c\n", seatNum, toupper(seatLetter));
-        const unsigned int column = 4; /*4 seat letters from column A - D*/
-        const unsigned int seatLetterOffset = toupper(seatLetter) - 'A'; /*A = 0, B = 1, C = 2, D = 3*/
-        const unsigned int seatIndex = (seatNum - 1) * 4 + seatLetterOffset; /*formula to convert human-readable seat to 0 base index*/
-        printf("Converted seat index: %d\n", seatIndex);
+      /*NUM_LETTER = global variable holds column width*/
+        const unsigned int seatLetterOffset = toupper(seatLetter) - minLetter; /*A = 0, B = 1, C = 2, D = 3, etc...*/
+        const unsigned int seatIndex = (seatNum - 1) * NUM_LETTERS + seatLetterOffset; /*formula to convert human-readable seat to 0 base index*/
         return seatIndex;
     }
     
@@ -486,7 +479,7 @@ int GetPassengerIdFromUser(void)
     unsigned int maxTry = 3;
     for (;;)
     {
-        ClearInputBuffer(); /*clear the input buffer*/
+        ClearInputBuffer(); /*clear the input buffer in case there are previous characters*/
         printf("Enter passenger ID between 1 and 999: ");
         itemsRead = scanf("%d", &pID);
         if (itemsRead > 0 && pID > 0 && pID < 1000) /*valid input and passenger ID meet range requirement*/
@@ -496,9 +489,9 @@ int GetPassengerIdFromUser(void)
         }     
         if (++nTry == maxTry)
         {
-            printf("You've maxed out the number of attempts (e.g. %d) to enter your passenger ID.", nTry);
+            printf("You've maxed out the number of attempts (e.g. %d) to enter your passenger ID.\n", nTry);
             ClearInputBuffer();
-            return 0; 
+             return 0; 
         }
     }
     
@@ -516,7 +509,6 @@ int FindSeatWithPassenger(const int passengerId)
     {
         if (g_reservations[index] == passengerId) /*found passenger ID in reserveration system*/
         {
-            printf("Found Passenger ID: %d at seat: %d\n", g_reservations[index], index);
             return index; /*return seat index*/
         }
     }
@@ -539,13 +531,12 @@ int FindSeatWithPassenger(const int passengerId)
 */
 void ReserveSeat(void)
 {
-    
-    PrintReserveSeatExplanation(); /* Explanation of seating arrangement*/
+   // PrintReserveSeatExplanation(); /* Explanation of seating arrangement*/
     printf("Enter a seat to reserve: ");
     int inputSeat = GetEmptySeatFromUser(); /* wrapper function*/
     if (inputSeat < 0)
     {
-        printf("Failed to reserve your seat. \n");
+        return; /*early return*/
     }
     else
     {
@@ -590,7 +581,7 @@ void CancelReservation(void)
     int inputSeat = GetOccupiedSeatFromUser();
     if (inputSeat < 0 || inputSeat > 47) /*seat is emptied*/
     {
-        printf("Failed to cancel reservation \n");
+        return; /*early return*/
     }
     else
     {
@@ -609,9 +600,6 @@ void CancelReservation(void)
 
         }
     }
-        
-    
-    
 }
 
 /*
@@ -731,7 +719,7 @@ void DisplayMenu(void)
     printf("  (2) Cancel Reservation\n");
     printf("  (3) Move Seat Reservation\n");
     printf("  (4) Display Current Seating\n");
-}
+ }
 
 /*
 ** Prompts the user to enter a valid menu choice.
@@ -787,7 +775,7 @@ int main(void)
             case 4:
                 DisplaySeating();
                 break;
-            default:  /*fall-through when choice is neither 1 - 4*/
+            default:  /*fall-through when choice is neither 1 - 4 inclusive*/
                 break;
         }
     } while (choice !=0); /*evaluate after switch block*/
