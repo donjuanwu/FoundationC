@@ -175,8 +175,8 @@
 */
 enum
 {
-    NUM_ROWS = 12,
-    NUM_LETTERS = 4,
+    NUM_ROWS = 20,
+    NUM_LETTERS = 6,
     NUM_SEATS = (NUM_ROWS * NUM_LETTERS)
 };
 
@@ -637,41 +637,72 @@ void MoveSeat(void)
 
 }
 
-/*
-** Print a neatly formatted display of the current seating reservations
-** as shown in this example.
-**   - Seat row numbers and passenger IDs are right justified as shown.
-**   - Seat letters are centered as shown.
-**   - Only non-zero passenger IDs are printed.
-**
-**     ------------------------------
-**      Current Seating Reservations
-**     ------------------------------
-**          |  A  |  B  |  C  |  D  |
-**     -----+-----+-----+-----+-----+
-**        1 | 123 |     |     |     |
-**        2 |     |     |     |     |
-**        3 |     |     |   2 |     |
-**        4 |     |     |     |     |
-**        5 |     |  64 |     |     |
-**        6 | 345 |     |     |     |
-**        7 |     |     |     |     |
-**        8 |     |   7 |     |     |
-**        9 |     |     |     |     |
-**       10 |     |     |     | 678 |
-**       11 |     |     |     |     |
-**       12 |     |     |     |     |
-**
-** OPTIONAL (Not graded.  No credit given). Improve the code below...
-**   - If NUM_LETTERS was bigger than 4...
-**       - Have the correct overall width.
-**       - Have the correct number of columns.
-**   - Line up columns whether each seat is empty or occupied.
-**   - Right align row numbers and seat names.
-**   - (OK for title to be fixed width and left justified)
-**   - I do not recommend creating helper functions.
-**     My solution is pretty tight without them.
-*/
+///*
+//** Print a neatly formatted display of the current seating reservations
+//** as shown in this example.
+//**   - Seat row numbers and passenger IDs are right justified as shown.
+//**   - Seat letters are centered as shown.
+//**   - Only non-zero passenger IDs are printed.
+//**
+//**     ------------------------------
+//**      Current Seating Reservations
+//**     ------------------------------
+//**          |  A  |  B  |  C  |  D  |
+//**     -----+-----+-----+-----+-----+
+//**        1 | 123 |     |     |     |
+//**        2 |     |     |     |     |
+//**        3 |     |     |   2 |     |
+//**        4 |     |     |     |     |
+//**        5 |     |  64 |     |     |
+//**        6 | 345 |     |     |     |
+//**        7 |     |     |     |     |
+//**        8 |     |   7 |     |     |
+//**        9 |     |     |     |     |
+//**       10 |     |     |     | 678 |
+//**       11 |     |     |     |     |
+//**       12 |     |     |     |     |
+//**
+//** OPTIONAL (Not graded.  No credit given). Improve the code below...
+//**   - If NUM_LETTERS was bigger than 4...
+//**       - Have the correct overall width.
+//**       - Have the correct number of columns.
+//**   - Line up columns whether each seat is empty or occupied.
+//**   - Right align row numbers and seat names.
+//**   - (OK for title to be fixed width and left justified)
+//**   - I do not recommend creating helper functions.
+//**     My solution is pretty tight without them.
+//*/
+//void DisplaySeating(void)
+//{
+//    int row, letter;
+//
+//    /****** Title ******/
+//    printf("\n------------------------------");
+//    printf("\n Current Seating Reservations");
+//    printf("\n------------------------------");
+//
+//    /****** Column Header ******/
+//    printf("\n     |  A  |  B  |  C  |  D  |");
+//    printf("\n-----+-----+-----+-----+-----+");
+//    printf("\n");
+//
+//    /****** Rows ******/
+//    for (row = 0; row < NUM_ROWS; ++row)
+//    {
+//        const int rowNumber = row + 1;
+//        printf("%*d |", NUM_LETTERS, rowNumber);
+//        for (letter = 0; letter < NUM_LETTERS; ++letter)
+//        {
+//            int seat = row * NUM_LETTERS + letter;
+//            int id = g_reservations[seat];
+//
+//            if (id == 0) printf("     |");
+//            else printf(" %3d |", id); /*padded 3 spaces*/
+//        }
+//        printf("\n");
+//    }
+//}
+
 void DisplaySeating(void)
 {
     int row, letter;
@@ -682,26 +713,38 @@ void DisplaySeating(void)
     printf("\n------------------------------");
 
     /****** Column Header ******/
-    printf("\n     |  A  |  B  |  C  |  D  |");
-    printf("\n-----+-----+-----+-----+-----+");
+    printf("\n     |");
+    for (letter = 0; letter < NUM_LETTERS; ++letter)
+    {
+        printf("  %c  |", 'A' + letter);  // Dynamically print columns (A, B, C, ... depending on NUM_LETTERS)
+    }
+    printf("\n-----+");
+    for (letter = 0; letter < NUM_LETTERS; ++letter)
+    {
+        printf("-----+");
+    }
     printf("\n");
 
     /****** Rows ******/
     for (row = 0; row < NUM_ROWS; ++row)
     {
         const int rowNumber = row + 1;
-        printf("%4d |", rowNumber);
+        printf("%4d |", rowNumber);  // Right-align row numbers
         for (letter = 0; letter < NUM_LETTERS; ++letter)
         {
             int seat = row * NUM_LETTERS + letter;
             int id = g_reservations[seat];
 
-            if (id == 0) printf("     |");
-            else printf(" %3d |", id); /*padded 3 spaces*/
+            if (id == 0)
+                printf("     |");
+            else
+                printf(" %3d |", id);  // Right-align seat IDs
         }
         printf("\n");
     }
 }
+
+
 
 /*
 ** Display the title and main menu of the program.
