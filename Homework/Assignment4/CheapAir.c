@@ -158,6 +158,13 @@
 *                                   Added helper function int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
 *                                       - convert valid human-readable seat to 0 base index array
 * 
+* 10/3/24       Don D               Removed helper function int convertSeatNumToSeatIndex(unsigned int row, char seatLetter)
+*                                   - include logic in GetSeatInput()
+* 
+* 10/5/24       Don D               Refactored DisplaySeating()
+*                                   - dynamically print headers and column to accomodate when NUM_ROWS and NUM_LETTERS changed
+*                                   - keep instructor provided DisplaySeating() for reference
+*                                   - disable calling PrintReserveSeatExplanation() 
 */
 
 #define _CRT_SECURE_NO_WARNINGS /*suppress Visual Studio scanf warnings*/
@@ -531,7 +538,6 @@ int FindSeatWithPassenger(const int passengerId)
 */
 void ReserveSeat(void)
 {
-   // PrintReserveSeatExplanation(); /* Explanation of seating arrangement*/
     printf("Enter a seat to reserve: ");
     int inputSeat = GetEmptySeatFromUser(); /* wrapper function*/
     if (inputSeat < 0)
@@ -579,7 +585,7 @@ void CancelReservation(void)
 {
     printf("Enter a seat to cancel: ");
     int inputSeat = GetOccupiedSeatFromUser();
-    if (inputSeat < 0 || inputSeat > 47) /*seat is emptied*/
+    if (inputSeat < 0 || inputSeat > NUM_SEATS) /*seat is emptied*/
     {
         return; /*early return*/
     }
@@ -637,41 +643,42 @@ void MoveSeat(void)
 
 }
 
-///*
-//** Print a neatly formatted display of the current seating reservations
-//** as shown in this example.
-//**   - Seat row numbers and passenger IDs are right justified as shown.
-//**   - Seat letters are centered as shown.
-//**   - Only non-zero passenger IDs are printed.
-//**
-//**     ------------------------------
-//**      Current Seating Reservations
-//**     ------------------------------
-//**          |  A  |  B  |  C  |  D  |
-//**     -----+-----+-----+-----+-----+
-//**        1 | 123 |     |     |     |
-//**        2 |     |     |     |     |
-//**        3 |     |     |   2 |     |
-//**        4 |     |     |     |     |
-//**        5 |     |  64 |     |     |
-//**        6 | 345 |     |     |     |
-//**        7 |     |     |     |     |
-//**        8 |     |   7 |     |     |
-//**        9 |     |     |     |     |
-//**       10 |     |     |     | 678 |
-//**       11 |     |     |     |     |
-//**       12 |     |     |     |     |
-//**
-//** OPTIONAL (Not graded.  No credit given). Improve the code below...
-//**   - If NUM_LETTERS was bigger than 4...
-//**       - Have the correct overall width.
-//**       - Have the correct number of columns.
-//**   - Line up columns whether each seat is empty or occupied.
-//**   - Right align row numbers and seat names.
-//**   - (OK for title to be fixed width and left justified)
-//**   - I do not recommend creating helper functions.
-//**     My solution is pretty tight without them.
-//*/
+/*
+** Original Provided DisplaySeating()
+** Print a neatly formatted display of the current seating reservations
+** as shown in this example.
+**   - Seat row numbers and passenger IDs are right justified as shown.
+**   - Seat letters are centered as shown.
+**   - Only non-zero passenger IDs are printed.
+**
+**     ------------------------------
+**      Current Seating Reservations
+**     ------------------------------
+**          |  A  |  B  |  C  |  D  |
+**     -----+-----+-----+-----+-----+
+**        1 | 123 |     |     |     |
+**        2 |     |     |     |     |
+**        3 |     |     |   2 |     |
+**        4 |     |     |     |     |
+**        5 |     |  64 |     |     |
+**        6 | 345 |     |     |     |
+**        7 |     |     |     |     |
+**        8 |     |   7 |     |     |
+**        9 |     |     |     |     |
+**       10 |     |     |     | 678 |
+**       11 |     |     |     |     |
+**       12 |     |     |     |     |
+**
+** OPTIONAL (Not graded.  No credit given). Improve the code below...
+**   - If NUM_LETTERS was bigger than 4...
+**       - Have the correct overall width.
+**       - Have the correct number of columns.
+**   - Line up columns whether each seat is empty or occupied.
+**   - Right align row numbers and seat names.
+**   - (OK for title to be fixed width and left justified)
+**   - I do not recommend creating helper functions.
+**     My solution is pretty tight without them.
+*/
 //void DisplaySeating(void)
 //{
 //    int row, letter;
@@ -703,14 +710,40 @@ void MoveSeat(void)
 //    }
 //}
 
+
+/**
+ * @brief Displays a formatted table of the current seating reservations.
+ *
+ * This function dynamically prints a seating chart based on the number of rows
+ * and columns specified by the `NUM_ROWS` and `NUM_LETTERS` macros (enum).
+ *
+ * - The function prints a title and a dynamically generated header with seat
+ *   letters (A, B, C, etc.) based on `NUM_LETTERS`.
+ * - Each row is numbered (1, 2, 3, ...) up to `NUM_ROWS`.
+ * - For each seat, if a passenger ID is present in `g_reservations[]`, it is
+ *   displayed in that seat. Otherwise, an empty space is shown.
+ * - The seat numbers and passenger IDs are right-aligned for neat formatting.
+ *
+ * @note The number of rows and columns can be adjusted by modifying the
+ *       `NUM_ROWS` and `NUM_LETTERS` macros (enum).
+ *
+ * @return void
+ */
 void DisplaySeating(void)
 {
     int row, letter;
+    printf("\n");
+    for (letter = 0; letter <= NUM_LETTERS; ++letter)
+    {
+        printf("------");
+    }
+    printf("\n %*s", NUM_ROWS, "Current Seating Reservations");
+    printf("\n");
+    for (letter = 0; letter <= NUM_LETTERS; ++letter)
+    {
+        printf("------");
+    }
 
-    /****** Title ******/
-    printf("\n------------------------------");
-    printf("\n Current Seating Reservations");
-    printf("\n------------------------------");
 
     /****** Column Header ******/
     printf("\n     |");
