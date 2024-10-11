@@ -15,9 +15,10 @@ void ReadInput(void)
     unsigned int ch;
     unsigned int newLine = 0;
     unsigned int isContent = 0;
-    while (ch = getchar() != EOF)
+    while ((ch = getchar()) != EOF && ch != '\n')
     {
-        if (ch == '\n')
+        printf("%c", ch);
+        if (ch == '\n') 
         {
             newLine += 1;
         }
@@ -26,18 +27,16 @@ void ReadInput(void)
     }
     if (!newLine && !isContent) /*input has no new line character and content, empty line*/
     {
-        printf("Number of lines: %d\n", newLine);
+        printf("\nNumber of lines: %d", newLine);
     }
     if (!newLine && isContent) /*no new line but there is content, then it's 1 line*/
     {
-        printf("Number of lines: %d\n", newLine);
+        printf("\nNumber of lines: %d", isContent);
     }
     if (isContent && newLine > 0) /*line count depends on newLine value*/
     {
-        printf("Number of lines: %d\n", newLine);
+        printf("\nNumber of lines: %d", newLine);
     }
-
-
 
 }
 
