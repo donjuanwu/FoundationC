@@ -5,9 +5,11 @@
 **
 ** Date         Developer       Activities
 *  10/10/24     Don D           Started CountLines.c
+*  10/1124      Don D           Completed assignment and tested using 11 test files
 */
 
 #include <stdio.h>
+#include <ctype.h>
 
 
 void ReadInput(void)
@@ -15,28 +17,18 @@ void ReadInput(void)
     unsigned int ch;
     unsigned int newLine = 0;
     unsigned int isContent = 0;
-    while ((ch = getchar()) != EOF && ch != '\n')
+    while ((ch = getchar()) != EOF)
     {
-        printf("%c", ch);
-        if (ch == '\n') 
-        {
-            newLine += 1;
-        }
-        isContent = 1;
+        if (ch == '\n') newLine += 1;
+        if (isalnum(ch))isContent = 1; 
+    }
+    
+    
+    if (!isContent && !newLine) printf("Number of lines: %d", newLine); /*input has no content and no new line, empty line*/
+    if (!isContent && newLine > 0) printf("Number of lines: %d", newLine); /*there is no content but new line detected*/
+    if (isContent && !newLine) printf("Number of lines: %d", isContent); /*there is content but no new line, then it's 1 line*/
+    if (isContent && newLine > 0) printf("Number of lines: %d", newLine); /*there is content, line count depends on newLine value*/
 
-    }
-    if (!newLine && !isContent) /*input has no new line character and content, empty line*/
-    {
-        printf("\nNumber of lines: %d", newLine);
-    }
-    if (!newLine && isContent) /*no new line but there is content, then it's 1 line*/
-    {
-        printf("\nNumber of lines: %d", isContent);
-    }
-    if (isContent && newLine > 0) /*line count depends on newLine value*/
-    {
-        printf("\nNumber of lines: %d", newLine);
-    }
 
 }
 

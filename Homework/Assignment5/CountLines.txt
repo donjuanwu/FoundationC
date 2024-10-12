@@ -1,0 +1,33 @@
+CountLines.exe < CountLines_0_F.txt
+Number of lines: 0
+
+CountLines.exe < CountLines_1_cF.txt
+Number of lines: 1
+
+CountLines.exe < CountLines_1_cNF.txt
+Number of lines: 1
+
+CountLines.exe < CountLines_2_cNNF.txt
+Number of lines: 2
+
+CountLines.exe < CountLines_3_cNNcNF.txt
+Number of lines: 3
+
+CountLines.exe < CountLines_4_cNcNcNcNF.txt
+Number of lines: 4
+
+CountLines.exe < CountLines_4_cNNNNF.txt
+Number of lines: 4
+
+CountLines.exe < CountLines_4_NNNNF.txt
+Number of lines: 4
+
+CountLines.exe < CountLines_5_NNNNcNF.txt
+Number of lines: 5
+
+CountLines.exe < CountLines_6_NNNNcNNF.txt
+Number of lines: 6
+
+CountLines.exe < CountLines_7_NNNNcNNNcF.txt
+Number of lines: 7
+
