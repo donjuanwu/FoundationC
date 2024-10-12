@@ -26,6 +26,7 @@
 */
 
 #include <stdio.h>
+#include <ctype.h>
 
 /*
 ** Special signals when non-hex digit is read.
@@ -58,7 +59,7 @@ int ReadHexDigit(void);
 */
 void SkipRestOfLine(void)
 {
-    while (getchar() != EOF);
+    while (getchar() != '\n');
 }
 
 /*
@@ -79,14 +80,38 @@ int ConvertNumber(void)
     const unsigned int base16 = 16;
     const unsigned int base10 = 10;
     printf("Enter a non-negative base %d (hexadecimal) number to be converted to base %d.\n", base16, base10);
-    printf("Enter 'q' or 'Q' to quit, and enter no more than %d digits: ", GetBitness());
+    printf("Enter 'q' or 'Q' to quit, and enter no more than %d digits: ", GetBitness() / 4);
     
     {
 
-        unsigned int ch;
+        int ch;
+        const char lowerF = 'f';
+        const char upperF = 'F';
         while ((ch = getchar()) != EOF)
         {
-            return 0;
+            if (ch == ' ')
+            {
+                SkipRestOfLine(); /*clear input buffer*/
+                printf("ERROR: Nothing was entered, try again\n");
+                return 1;
+            }
+            if (!isalnum(ch))
+            {
+                SkipRestOfLine(); /*clear input buffer*/
+                printf("ERROR: Unrecognized hex number, try again\n");
+                return 1;
+            }
+            if (ch == 'q' || ch == 'Q')
+            {
+                return 0; 
+            }
+            if (ch > lowerF || ch > upperF)
+            {
+                SkipRestOfLine(); /*clear input buffer*/
+                printf("ERROR: Unrecognized hex number, try again\n");
+                return 1;
+            }
+
         }
     }
 
