@@ -32,8 +32,8 @@ void ReadInput(void)
 
 }
 
-int main()
-{
-    ReadInput();
-    return 0;
-}
+//int main()
+//{
+//    ReadInput();
+//    return 0;
+//}

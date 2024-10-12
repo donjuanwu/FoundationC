@@ -17,8 +17,12 @@
 **   Updated:   October 9, 2024
 **
 ** Student Solution
-**   Author:    --- Enter your name here ---
-**   Date:      --- Enter date here ---
+**   Author:    Don Dang
+**   Date:      10/11/24
+**
+** Date         Developer       Activities
+** 10/11/24     Don D           Started HexToDec.c
+** 
 */
 
 #include <stdio.h>
@@ -52,7 +56,10 @@ int ReadHexDigit(void);
 ** Reads and consumes the standard input, using getchar(), until newline ('\n') or end of file (EOF)
 ** are encountered.  The newline ('\n') character is also consumed.
 */
-void SkipRestOfLine(void);
+void SkipRestOfLine(void)
+{
+    while (getchar() != EOF);
+}
 
 /*
 ** Converts a hexadecimal number entered by the user into a decimal number, and prints
@@ -69,7 +76,21 @@ void SkipRestOfLine(void);
 */
 int ConvertNumber(void)
 {
-    /* TODO: Implement this function. */
+    const unsigned int base16 = 16;
+    const unsigned int base10 = 10;
+    printf("Enter a non-negative base %d (hexadecimal) number to be converted to base %d.\n", base16, base10);
+    printf("Enter 'q' or 'Q' to quit, and enter no more than %d digits: ", GetBitness());
+    
+    {
+
+        unsigned int ch;
+        while ((ch = getchar()) != EOF)
+        {
+            return 0;
+        }
+    }
+
+
     return 0;
 }
 
@@ -94,10 +115,10 @@ static const char* GetNameOfBuild(void)
 #endif
 }
 
-//int main(void)
-//{
-//    printf("Welcome to (%s %d bit) HexToDec.\n\n", GetNameOfBuild(), GetBitness());
-//    while (ConvertNumber()) continue;
-//    printf ("\nGoodbye.\n");
-//    return 0;
-//}
+int main(void)
+{
+    printf("Welcome to (%s %d bit) HexToDec.\n\n", GetNameOfBuild(), GetBitness());
+    while (ConvertNumber()) continue;
+    printf ("\nGoodbye.\n");
+    return 0;
+}
