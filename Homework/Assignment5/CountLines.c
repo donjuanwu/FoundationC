@@ -9,31 +9,66 @@
 */
 
 #include <stdio.h>
-#include <ctype.h>
+/*Keep for historical review - too much redundancy with if conditions*/
+//void ReadInput2(void)
+//
+//{
+//    unsigned int ch;
+//    unsigned int newLine = 0;
+//    unsigned int isContent = 0;
+//    while ((ch = getchar()) != EOF)
+//    {
+//        if (ch == '\n')
+//        {
+//            newLine += 1;
+//        }
+//        else
+//        {
+//            isContent = 1;
+//        }
+//    }
+//
+//
+//    if (!isContent && !newLine) printf("Number of lines: %d", newLine); /*there is no content and no new line, empty line*/
+//if (!isContent && newLine > 0) printf("Number of lines: %d", newLine); /*there is no content but new line detected*/
+//if (isContent && !newLine) printf("Number of lines: %d", isContent); /*there is content but no new line, then it's 1 line*/
+//if (isContent && newLine > 0) printf("Number of lines: %d", newLine); /*there is content, line count depends on newLine value*/
+//}
 
 
 void ReadInput(void)
 {
-    unsigned int ch;
-    unsigned int newLine = 0;
-    unsigned int isContent = 0;
+    int ch;
+    int newLine = 0;
+    int isContent = 0;
+    int lastChar = 0;  // Store last character read
+
     while ((ch = getchar()) != EOF)
     {
-        if (ch == '\n') newLine += 1;
-        if (isalnum(ch))isContent = 1; 
+        lastChar = ch;  // Track last character read
+        if (ch == '\n')
+        {
+            newLine++;
+            isContent = 0;  // Reset isContent after a newline
+        }
+        else
+        {
+            isContent = 1;  // Mark content was read
+        }
     }
-    
-    
-    if (!isContent && !newLine) printf("Number of lines: %d", newLine); /*input has no content and no new line, empty line*/
-    if (!isContent && newLine > 0) printf("Number of lines: %d", newLine); /*there is no content but new line detected*/
-    if (isContent && !newLine) printf("Number of lines: %d", isContent); /*there is content but no new line, then it's 1 line*/
-    if (isContent && newLine > 0) printf("Number of lines: %d", newLine); /*there is content, line count depends on newLine value*/
 
+    // Last character was not a newline, and there was content, increment the line count
+    if (lastChar != '\n' && isContent)
+    {
+        newLine++;
+    }
 
+    printf("Number of lines: %d\n", newLine);
 }
 
-//int main()
-//{
-//    ReadInput();
-//    return 0;
-//}
+
+int main()
+{
+    ReadInput();
+    return 0;
+}
