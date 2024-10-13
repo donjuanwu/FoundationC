@@ -1,0 +1,131 @@
+######################Max Allow Hex Digits With Greatest Hex Value - lower case f###########################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: ffffffffffffffff
+Hex FFFFFFFFFFFFFFFF converted to decimal is 18446744073709551615.
+
+######################Max Allow Hex Digits With Greatest Hex Value - Upper case F###########################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: FFFFFFFFFFFFFFFF
+Hex FFFFFFFFFFFFFFFF converted to decimal is 18446744073709551615.
+
+######################Max Allow Hex Digits With Smallest Hex Value - 0#######################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: 00000000000000000
+Hex 0 converted to decimal is 0.
+
+######################Max Allow Hex Digits With Valid Aplphanumeric Hex Characters###########################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: 00000aaaaaFFFFFF
+Hex AAAAAFFFFFF converted to decimal is 11728129622015.
+
+######################Max Allow Hex Digits With 17 Invalid Characters##########################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: *****************
+ERROR: Unrecognized hex number, try again.
+
+######################Over Max Allowed Hex Digits With 17 Valid Characters###################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: 123456789abcdef12
+ERROR: Cannot enter more than 16 hex digits, try again.
+
+######################Min Allow Hex Digits With Greatest Hex Value - lower case f##############################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: f
+Hex F converted to decimal is 15.
+
+######################Min Allow Hex Digits With Greatest Hex Value - upper case F##############################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: F
+Hex F converted to decimal is 15.
+
+######################Min Allow Hex Digits With Smallest Hex Value - 0########################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: 0
+Hex 0 converted to decimal is 0.
+
+######################Unrecognied Hex Character Beginning Of Input - R2D2#####################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: R2D2
+ERROR: Unrecognized hex number, try again.
+
+######################Unrecognied Hex Character Middle Of Input - C3P1########################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: C3P1
+ERROR: Unrecognized hex number, try again.
+
+######################Unrecognied Hex Character End Of Input - aaaaZ########################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: aaaaZ
+ERROR: Unrecognized hex number, try again.
+
+######################Entered New Line/EOF###################################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits:
+ERROR: Nothing was entered, try again.
+
+######################Entered Invalid Character: g###########################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: g
+ERROR: Unrecognized hex number, try again.
+
+######################Entered Invalid Character: G###########################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: G
+ERROR: Unrecognized hex number, try again.
+
+######################Entered Invalid Character: a space######################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits:
+ERROR: Unrecognized hex number, try again.
+
+######################Entered Invalid Character: -1###########################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: -1
+ERROR: Unrecognized hex number, try again.
+
+
+######################Entered Valid Character: A Digit#######################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: 0
+Hex 0 converted to decimal is 0.
+
+######################Entered Valid Character: Lower Case a###################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: a
+Hex A converted to decimal is 10.
+
+######################Entered Valid Character: Lower Case A###################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: A
+Hex A converted to decimal is 10.
+
+######################Entered Valid Character: Double Digit######################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: 19
+Hex 19 converted to decimal is 25.
+
+######################Entered Valid Character: Double Character##################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: AF
+Hex AF converted to decimal is 175.
+
+######################Entered Valid Character: Double Character Mixed Case#######################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: Af
+Hex AF converted to decimal is 175.
+
+######################Entered Valid Character: Alpha numeric#####################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: 1aA1
+Hex 1AA1 converted to decimal is 6817.
+
+
+######################Entered q/Q################################################################################################
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: q
+Goodbye.
+
+Enter a non-negative base 16 (hexadecimal) number to be converted to base 10.
+Enter 'q' or 'Q' to quit, and enter no more than 16 digits: Q
+Goodbye.
+

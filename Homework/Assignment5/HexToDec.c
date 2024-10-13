@@ -22,7 +22,9 @@
 **
 ** Date         Developer       Activities
 ** 10/11/24     Don D           Started HexToDec.c
-**
+** 10/12/24		Don D			Compare converted hex to decimal on https://www.rapidtables.com/convert/number/hex-to-decimal
+*								Refactored global variables declaration to enum {} declaration
+*								Completed HexToDec.c with 25 test cases
 */
 
 #include <stdio.h>
@@ -41,9 +43,6 @@ enum
 	SIGNAL_ILLEGAL = -2,  /* Signals an illegal character was entered */
 	SIGNAL_QUIT = -3  /* Signals 'Q' or 'q' was entered */
 };
-//const int SIGNAL_NEWLINE = -1;  /* Signals '\n' character was entered */
-//const int SIGNAL_ILLEGAL = -2;  /* Signals an illegal character was entered */
-//const int SIGNAL_QUIT = -3;  /* Signals 'Q' or 'q' was entered */
 
 /*
 ** Reads and consumes the standard input, using getchar(), until newline ('\n') or end of file (EOF)
@@ -78,8 +77,7 @@ int ReadHexDigit(void)
 		}
 		if (ch == '\n')
 		{
-			//SkipRestOfLine(); /* skip calling because newline is already consumed*/
-			//printf("ERROR: Nothing was entered, return\n");
+			/* skip calling SkipRestOfLine() because newline is already consumed*/
 			return SIGNAL_NEWLINE;
 		}
 		if ((ch < '0' || ch > '9') && (ch < 'A' || ch > 'F') && (ch < 'a' || ch > 'f'))
@@ -95,7 +93,7 @@ int ReadHexDigit(void)
 			/* handle A - F*/
 		case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
 			return ch - 'A' + 10; /* convert upper case A-F to get numeric value from 10 - 15*/
-			/* hand a -f*/
+			/* hand a - f*/
 		case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
 			return ch - 'a' + 10; /* convert upper case a-f to get numeric value from 10 - 15*/
 		default:
@@ -123,7 +121,7 @@ int ConvertNumber(void)
 {
 	const unsigned int base16 = 16;
 	const unsigned int base10 = 10;
-	const unsigned int maxDigits = (GetBitness() / 4); /*reduce to the maximum hex digits to enter*/
+	const unsigned int maxDigits = (GetBitness() / 4); /*allow maximum hex digits to enter*/
 	unsigned int countHex = 0; /*keep a count on valid hex value entered*/
 	unsigned long long decValue = 0; /*running total for decimal value, unsigned long long for 64-bit OS*/
 	int retHexDigit; /*result from ReadHexDigit*/
@@ -132,33 +130,33 @@ int ConvertNumber(void)
 
 	while ((retHexDigit = ReadHexDigit()) != SIGNAL_ILLEGAL && retHexDigit != SIGNAL_NEWLINE && retHexDigit != SIGNAL_QUIT)
 	{
-		
+		countHex += 1;
 		if (countHex > maxDigits)
 		{
-			printf("ERROR: Cannot enter more than %d hex digits, try again.\n\n", base16);
+			printf("ERROR: Cannot enter more than %d hex digits, try again.\n\n", maxDigits);
 			return 1;
 		}
-		countHex += 1;
+		
 		decValue = (decValue * base16) + retHexDigit; /*keep running total of decimal value*/
 	}
-	if (retHexDigit == SIGNAL_ILLEGAL)
+	if (retHexDigit == SIGNAL_ILLEGAL) /*user entered invalid hex character*/
 	{
 		printf("ERROR: Unrecognized hex number, try again.\n\n");
 		return 1;
 	}
-	if (retHexDigit == SIGNAL_QUIT)
+	if (retHexDigit == SIGNAL_QUIT) /*user entered q/Q to quit*/
 	{
 		return 0;
 	}
 
-	if (countHex == 0) /*when user didn't entered a valid hex and pressed Enter Key*/
+	if (countHex == 0) /*user didn't entered a valid hex and pressed Enter Key*/
 	{
 		printf("ERROR: Nothing was entered, try again.\n\n");
 		return 1;
 	}
 
-	
-	printf("Hex %llX converted to decimal is %llu.\n\n", decValue, decValue);
+
+	printf("Hex %llX converted to decimal is %llu.\n\n", decValue, decValue); /*%llx & %llu format specifier for 64 bits*/
 	return 1;
 
 }
