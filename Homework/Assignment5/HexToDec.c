@@ -72,7 +72,7 @@ int ReadHexDigit(void)
 	{
 		if (ch == 'q' || ch == 'Q')
 		{
-			SkipRestOfLine(); /*clear input buffer*/
+			SkipRestOfLine(); /* clear input buffer*/
 			return SIGNAL_QUIT;
 		}
 		if (ch == '\n')
@@ -82,7 +82,7 @@ int ReadHexDigit(void)
 		}
 		if ((ch < '0' || ch > '9') && (ch < 'A' || ch > 'F') && (ch < 'a' || ch > 'f'))
 		{
-			SkipRestOfLine(); /*clear input buffer*/
+			SkipRestOfLine(); /* clear input buffer*/
 			return SIGNAL_ILLEGAL;
 		}
 		switch (ch)
