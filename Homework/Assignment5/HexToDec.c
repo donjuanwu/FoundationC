@@ -26,7 +26,6 @@
 */
 
 #include <stdio.h>
-#include <ctype.h>
 
 /*
 ** Special signals when non-hex digit is read.
@@ -53,10 +52,7 @@ enum
 void SkipRestOfLine(void)
 {
 	char ch;
-	while ((ch = getchar()) != EOF)
-	{
-		if (ch == '\n') break; /*move to next iteration, skip new line*/
-	}
+	while ((ch = getchar()) != '\n' && ch != EOF);
 }
 
 /*
@@ -78,23 +74,19 @@ int ReadHexDigit(void)
 		if (ch == 'q' || ch == 'Q')
 		{
 			SkipRestOfLine(); /*clear input buffer*/
-			printf("ERROR: Q or q was entered, return\n");
 			return SIGNAL_QUIT;
 		}
 		if (ch == '\n')
 		{
 			//SkipRestOfLine(); /* skip calling because newline is already consumed*/
-			printf("ERROR: Nothing was entered, return\n");
+			//printf("ERROR: Nothing was entered, return\n");
 			return SIGNAL_NEWLINE;
 		}
 		if ((ch < '0' || ch > '9') && (ch < 'A' || ch > 'F') && (ch < 'a' || ch > 'f'))
 		{
 			SkipRestOfLine(); /*clear input buffer*/
-			printf("ERROR: Unrecognized hex number, return\n");
 			return SIGNAL_ILLEGAL;
 		}
-
-
 		switch (ch)
 		{
 			/* handle 0 - 9*/
@@ -102,10 +94,10 @@ int ReadHexDigit(void)
 			return ch - '0'; /* subtract '0' to get numeric value*/
 			/* handle A - F*/
 		case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-			return ch - 'A'; /* convert upper case A-F to get numeric value from 10 - 15*/
+			return ch - 'A' + 10; /* convert upper case A-F to get numeric value from 10 - 15*/
 			/* hand a -f*/
 		case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-			return ch - 'a'; /* convert upper case a-f to get numeric value from 10 - 15*/
+			return ch - 'a' + 10; /* convert upper case a-f to get numeric value from 10 - 15*/
 		default:
 			return SIGNAL_ILLEGAL; /* illegal character*/
 
@@ -113,8 +105,6 @@ int ReadHexDigit(void)
 	}
 
 }
-
-
 
 /*
 ** Converts a hexadecimal number entered by the user into a decimal number, and prints
@@ -135,70 +125,42 @@ int ConvertNumber(void)
 	const unsigned int base10 = 10;
 	const unsigned int maxDigits = (GetBitness() / 4); /*reduce to the maximum hex digits to enter*/
 	unsigned int countHex = 0; /*keep a count on valid hex value entered*/
-	unsigned long decValue = 0;
-	int retReadHex;
-	/*printf("Enter a non-negative base %d (hexadecimal) number to be converted to base %d.\n", base16, base10);
-	printf("Enter 'q' or 'Q' to quit, and enter no more than %d digits: ", maxDigits);*/
-	/*retReadHex = ReadHexDigit();
-	if (retReadHex == SIGNAL_ILLEGAL)
-	{
-		printf("ERROR: Unrecognized hex number, try again.\n");
-		return 1;
+	unsigned long long decValue = 0; /*running total for decimal value, unsigned long long for 64-bit OS*/
+	int retHexDigit; /*result from ReadHexDigit*/
+	printf("Enter a non-negative base %d (hexadecimal) number to be converted to base %d.\n", base16, base10);
+	printf("Enter 'q' or 'Q' to quit, and enter no more than %d digits: ", maxDigits);
 
-	}
-	if (retReadHex == SIGNAL_NEWLINE)
+	while ((retHexDigit = ReadHexDigit()) != SIGNAL_ILLEGAL && retHexDigit != SIGNAL_NEWLINE && retHexDigit != SIGNAL_QUIT)
 	{
-		printf("ERROR: Nothing was entered, try again.\n");
+		
+		if (countHex > maxDigits)
+		{
+			printf("ERROR: Cannot enter more than %d hex digits, try again.\n\n", base16);
+			return 1;
+		}
+		countHex += 1;
+		decValue = (decValue * base16) + retHexDigit; /*keep running total of decimal value*/
+	}
+	if (retHexDigit == SIGNAL_ILLEGAL)
+	{
+		printf("ERROR: Unrecognized hex number, try again.\n\n");
 		return 1;
 	}
-	if (retReadHex == SIGNAL_QUIT)
+	if (retHexDigit == SIGNAL_QUIT)
 	{
 		return 0;
 	}
-	if (countHex > maxDigits)
+
+	if (countHex == 0) /*when user didn't entered a valid hex and pressed Enter Key*/
 	{
-		printf("ERROR: Cannot enter more than 8 hex digits, try again.\n");
+		printf("ERROR: Nothing was entered, try again.\n\n");
 		return 1;
 	}
-	while (retReadHex > SIGNAL_NEWLINE)
-	{
-		countHex += 1;
-		decValue += retReadHex;
-		unsigned int index;
-		for (index = 0; index < countHex; index++)
-		{
-			decValue *= base16;
-		}
-		printf("Decimal value: %d", decValue);
-	}*/
 
-	do /*display the menu at least once*/
-	{
-		printf("Enter a non-negative base %d (hexadecimal) number to be converted to base %d.\n", base16, base10);
-		printf("Enter 'q' or 'Q' to quit, and enter no more than %d digits: ", maxDigits);
-		retReadHex = ReadHexDigit();
-		switch (retReadHex)
-		{
-		case SIGNAL_ILLEGAL:
-			printf("ERROR: Unrecognized hex number, try again.\n");
-			return 1;
-		case SIGNAL_NEWLINE:
-			printf("ERROR: Nothing was entered, try again.\n");
-			return 1;
-		case SIGNAL_QUIT:
-			return 0;
+	
+	printf("Hex %llX converted to decimal is %llu.\n\n", decValue, decValue);
+	return 1;
 
-		default: 
-			countHex += 1;
-			decValue += retReadHex;
-			unsigned int index;
-			for (index = 0; index < countHex; index++)
-			{
-				decValue *= base16;
-			}
-			printf("Decimal value: %d", decValue);
-		}
-	} while (retReadHex > -1); /*evaluate after switch block*/
 }
 
 
@@ -225,10 +187,7 @@ static const char* GetNameOfBuild(void)
 int main(void)
 {
 	printf("Welcome to (%s %d bit) HexToDec.\n\n", GetNameOfBuild(), GetBitness());
-	while (ConvertNumber())
-	{
-		//to do
-	}
+	while (ConvertNumber()) continue;
 	printf("\nGoodbye.\n");
 	return 0;
- }
+}
